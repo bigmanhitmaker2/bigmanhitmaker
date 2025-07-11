@@ -1,0 +1,42 @@
+{
+  "code": 200,
+  "msg": "success",
+  "data": {
+    "callbackType": "complete",
+    "task_id": "ae315e600127a15d7ed460186fd79dac",
+    "data": [
+      {
+        "id": "b3e3aac9-d524-4691-bd60-9cf491889e68",
+        "audio_url": "https://apiboxfiles.erweima.ai/YjNlM2FhYzktZDUyNC00NjkxLWJkNjAtOWNmNDkxODg5ZTY4.mp3",
+        "stream_audio_url": "https://mfile.erweima.ai/YjNlM2FhYzktZDUyNC00NjkxLWJkNjAtOWNmNDkxODg5ZTY4",
+        "source_audio_url": "https://cdn1.suno.ai/b3e3aac9-d524-4691-bd60-9cf491889e68.mp3",
+        "source_stream_audio_url": "https://cdn1.suno.ai/b3e3aac9-d524-4691-bd60-9cf491889e68.mp3",
+        "image_url": "https://apiboxfiles.erweima.ai/YjNlM2FhYzktZDUyNC00NjkxLWJkNjAtOWNmNDkxODg5ZTY4.jpeg",
+        "source_image_url": "https://cdn2.suno.ai/image_b3e3aac9-d524-4691-bd60-9cf491889e68.jpeg",
+        "title": "Knockout King",
+        "prompt": "create a rap about winning a boxing championship v3",
+        "tags": "rap, aggressive, evoking a fight-night energy, hard-hitting, with heavy bass and layered snares",
+        "duration": 158.64,
+        "createTime": 1752149461552,
+        "model_name": "chirp-auk",
+        "lyrics": "[Verse]\nCame from the gutter, fists cold as the winter breeze\nNow my name ring bells louder than symphonies\nHeavy hands, turn chins into jelly beans\nCanvas kisses dreams, nightmares in the in-betweens\n\nBlood on the mat, sweat dripping like rainfall\nCrowd roaring, fists soaring, they watch me take all\nOpponent's eyes wide, he read my next chapter\nBut the pen's in my glove, I'm the author, disaster\n\n[Chorus]\nKnockout king, crown shining in the spotlight\nFists write history, every swing's a plotline\nWho want the smoke? Step up, I'll make it sting\nUndisputed, undefeated—I'm the knockout king\n\n[Verse 2]\nRopes bounce back, mirror my resilience\nOpponent's stance shaky, lacking that brilliance\nFeint left, jab right, now he feeling delirious\nChamp belt gleaming, proof my grind's serious\n\nThey doubted the kid, said I'd fall like dominoes\nNow I'm stacking W's, building my throne of gold\nSweatbands soaked, but the fire's still burning\nRound after round, my hunger keeps churning\n\n[Bridge]\nLeather gloves singing songs of destruction\nEach punch poetry, lyrical concussion\nCrowd on their feet, chanting my name loud\nFrom dirt to dynasty, I made my fam proud"
+      },
+      {
+        "id": "19cc6891-960f-4e3c-bc37-9abde3ef7d37",
+        "audio_url": "https://apiboxfiles.erweima.ai/MTljYzY4OTEtOTYwZi00ZTNjLWJjMzctOWFiZGUzZWY3ZDM3.mp3",
+        "stream_audio_url": "https://mfile.erweima.ai/MTljYzY4OTEtOTYwZi00ZTNjLWJjMzctOWFiZGUzZWY3ZDM3",
+        "source_audio_url": "https://cdn1.suno.ai/19cc6891-960f-4e3c-bc37-9abde3ef7d37.mp3",
+        "source_stream_audio_url": "https://cdn1.suno.ai/19cc6891-960f-4e3c-bc37-9abde3ef7d37.mp3",
+        "image_url": "https://apiboxfiles.erweima.ai/MTljYzY4OTEtOTYwZi00ZTNjLWJjMzctOWFiZGUzZWY3ZDM3.jpeg",
+        "source_image_url": "https://cdn2.suno.ai/image_19cc6891-960f-4e3c-bc37-9abde3ef7d37.jpeg",
+        "title": "Knockout King",
+        "prompt": "create a rap about winning a boxing championship v3",
+        "tags": "rap, aggressive, evoking a fight-night energy, hard-hitting, with heavy bass and layered snares",
+        "duration": 135.96,
+        "createTime": 1752149461552,
+        "model_name": "chirp-auk",
+        "lyrics": "[Verse]\nCame from the gutter, fists cold as the winter breeze\nNow my name ring bells louder than symphonies\nHeavy hands, turn chins into jelly beans\nCanvas kisses dreams, nightmares in the in-betweens\n\nBlood on the mat, sweat dripping like rainfall\nCrowd roaring, fists soaring, they watch me take all\nOpponent's eyes wide, he read my next chapter\nBut the pen's in my glove, I'm the author, disaster\n\n[Chorus]\nKnockout king, crown shining in the spotlight\nFists write history, every swing's a plotline\nWho want the smoke? Step up, I'll make it sting\nUndisputed, undefeated—I'm the knockout king\n\n[Verse 2]\nRopes bounce back, mirror my resilience\nOpponent's stance shaky, lacking that brilliance\nFeint left, jab right, now he feeling delirious\nChamp belt gleaming, proof my grind's serious\n\nThey doubted the kid, said I'd fall like dominoes\nNow I'm stacking W's, building my throne of gold\nSweatbands soaked, but the fire's still burning\nRound after round, my hunger keeps churning\n\n[Bridge]\nLeather gloves singing songs of destruction\nEach punch poetry, lyrical concussion\nCrowd on their feet, chanting my name loud\nFrom dirt to dynasty, I made my fam proud"
+      }
+    ]
+  }
+}

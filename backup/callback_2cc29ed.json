@@ -1,0 +1,42 @@
+{
+  "code": 200,
+  "msg": "success",
+  "data": {
+    "callbackType": "complete",
+    "task_id": "2cc29ed564c2d69ae17f9ff08fddbc54",
+    "data": [
+      {
+        "id": "c34a986b-e327-4fb0-8ba5-95474283bc34",
+        "audio_url": "https://apiboxfiles.erweima.ai/YzM0YTk4NmItZTMyNy00ZmIwLThiYTUtOTU0NzQyODNiYzM0.mp3",
+        "stream_audio_url": "https://mfile.erweima.ai/YzM0YTk4NmItZTMyNy00ZmIwLThiYTUtOTU0NzQyODNiYzM0",
+        "source_audio_url": "https://cdn1.suno.ai/c34a986b-e327-4fb0-8ba5-95474283bc34.mp3",
+        "source_stream_audio_url": "https://cdn1.suno.ai/c34a986b-e327-4fb0-8ba5-95474283bc34.mp3",
+        "image_url": "https://apiboxfiles.erweima.ai/YzM0YTk4NmItZTMyNy00ZmIwLThiYTUtOTU0NzQyODNiYzM0.jpeg",
+        "source_image_url": "https://cdn2.suno.ai/image_c34a986b-e327-4fb0-8ba5-95474283bc34.jpeg",
+        "title": "Roy the Champ",
+        "prompt": "Create a song about the olympic boxing gold medalist named roy jones",
+        "tags": "driving rhythm, bold instrumentation with punchy percussion and electric guitars",
+        "duration": 140.2,
+        "createTime": 1752154040552,
+        "model_name": "chirp-auk",
+        "lyrics": "[Verse]\nGloves up high in the smoky haze\nGolden fists\nThey set the world ablaze\nDancing like a shadow\nFloating on air\nRoy's in the ring\nNo one else compares\n\n[Prechorus]\nThey threw their best\nHe threw it better\nKnocked 'em down like a love letter\n\n[Chorus]\nRoy Jones\nThe champ\nThe king of the fight\nQuick as lightning\nBurning so bright\nThey swung\nHe swayed\nThey missed\nHe stayed\nRoy Jones\nGold medal made\n\n[Verse 2]\nSteps so slick\nLike a ghost in the night\nDodging punches\nTurning wrong to right\nEyes on the prize\nNo time for fear\nA roar in the crowd\n\"Roy is here!\"\n\n[Prechorus]\nHe danced\nThey fell\nThe bell would sing\nThe crown belongs to the boxing king\n\n[Chorus]\nRoy Jones\nThe champ\nThe king of the fight\nQuick as lightning\nBurning so bright\nThey swung\nHe swayed\nThey missed\nHe stayed\nRoy Jones\nGold medal made"
+      },
+      {
+        "id": "ebeeaac5-c2a8-43bb-9cd0-cbaa03c1896e",
+        "audio_url": "https://apiboxfiles.erweima.ai/ZWJlZWFhYzUtYzJhOC00M2JiLTljZDAtY2JhYTAzYzE4OTZl.mp3",
+        "stream_audio_url": "https://mfile.erweima.ai/ZWJlZWFhYzUtYzJhOC00M2JiLTljZDAtY2JhYTAzYzE4OTZl",
+        "source_audio_url": "https://cdn1.suno.ai/ebeeaac5-c2a8-43bb-9cd0-cbaa03c1896e.mp3",
+        "source_stream_audio_url": "https://cdn1.suno.ai/ebeeaac5-c2a8-43bb-9cd0-cbaa03c1896e.mp3",
+        "image_url": "https://apiboxfiles.erweima.ai/ZWJlZWFhYzUtYzJhOC00M2JiLTljZDAtY2JhYTAzYzE4OTZl.jpeg",
+        "source_image_url": "https://cdn2.suno.ai/image_ebeeaac5-c2a8-43bb-9cd0-cbaa03c1896e.jpeg",
+        "title": "Roy the Champ",
+        "prompt": "Create a song about the olympic boxing gold medalist named roy jones",
+        "tags": "driving rhythm, bold instrumentation with punchy percussion and electric guitars",
+        "duration": 138.12,
+        "createTime": 1752154040552,
+        "model_name": "chirp-auk",
+        "lyrics": "[Verse]\nGloves up high in the smoky haze\nGolden fists\nThey set the world ablaze\nDancing like a shadow\nFloating on air\nRoy's in the ring\nNo one else compares\n\n[Prechorus]\nThey threw their best\nHe threw it better\nKnocked 'em down like a love letter\n\n[Chorus]\nRoy Jones\nThe champ\nThe king of the fight\nQuick as lightning\nBurning so bright\nThey swung\nHe swayed\nThey missed\nHe stayed\nRoy Jones\nGold medal made\n\n[Verse 2]\nSteps so slick\nLike a ghost in the night\nDodging punches\nTurning wrong to right\nEyes on the prize\nNo time for fear\nA roar in the crowd\n\"Roy is here!\"\n\n[Prechorus]\nHe danced\nThey fell\nThe bell would sing\nThe crown belongs to the boxing king\n\n[Chorus]\nRoy Jones\nThe champ\nThe king of the fight\nQuick as lightning\nBurning so bright\nThey swung\nHe swayed\nThey missed\nHe stayed\nRoy Jones\nGold medal made"
+      }
+    ]
+  }
+}

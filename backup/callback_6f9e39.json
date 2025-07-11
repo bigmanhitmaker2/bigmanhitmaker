@@ -1,0 +1,42 @@
+{
+  "code": 200,
+  "msg": "success",
+  "data": {
+    "callbackType": "complete",
+    "task_id": "6f9e39d2eacc4627ee60ea1ad2c83786",
+    "data": [
+      {
+        "id": "49f3f17b-639d-45d0-87d5-6685be597458",
+        "audio_url": "https://apiboxfiles.erweima.ai/NDlmM2YxN2ItNjM5ZC00NWQwLTg3ZDUtNjY4NWJlNTk3NDU4.mp3",
+        "stream_audio_url": "https://mfile.erweima.ai/NDlmM2YxN2ItNjM5ZC00NWQwLTg3ZDUtNjY4NWJlNTk3NDU4",
+        "source_audio_url": "https://cdn1.suno.ai/49f3f17b-639d-45d0-87d5-6685be597458.mp3",
+        "source_stream_audio_url": "https://cdn1.suno.ai/49f3f17b-639d-45d0-87d5-6685be597458.mp3",
+        "image_url": "https://apiboxfiles.erweima.ai/NDlmM2YxN2ItNjM5ZC00NWQwLTg3ZDUtNjY4NWJlNTk3NDU4.jpeg",
+        "source_image_url": "https://cdn2.suno.ai/image_49f3f17b-639d-45d0-87d5-6685be597458.jpeg",
+        "title": "Champ's Glow",
+        "prompt": "create a rap about winning a boxing championship v2",
+        "tags": "bass-heavy, rap, hard-hitting, gritty",
+        "duration": 128.68,
+        "createTime": 1752146031905,
+        "model_name": "chirp-auk",
+        "lyrics": "[Verse]\nCame from the shadows, gloves laced, ready to fight\nEyes on the prize, gold belt shining in the light\nJab so quick, opponents hit the canvas fast\nRoy Jones spirit, leaving legends in the past\n\n[Chorus]\nChamp's glow, shining, never gonna fade\nFists like thunder, every punch a renegade\nOlympic dreams, I'm the king of the ring\nBow to the champ, hear the victory bells sing\n\n[Verse 2]\nCrowd's hyped up, feel the bass in the arena\nDodging every hook, moving slick like a dreamer\nFrom the streets to the top, built my name with grit\nEvery round I dominate, never take a hit\n\n[Bridge]\nGold in my veins, heart pumping like a drum\nWorld champ status, watch the kingdom come\nRoy Jones legacy, I'm carrying the flame\nUndisputed warrior, forever in the game"
+      },
+      {
+        "id": "07a5a8ad-241c-4d56-9808-7f5d6ee1660e",
+        "audio_url": "https://apiboxfiles.erweima.ai/MDdhNWE4YWQtMjQxYy00ZDU2LTk4MDgtN2Y1ZDZlZTE2NjBl.mp3",
+        "stream_audio_url": "https://mfile.erweima.ai/MDdhNWE4YWQtMjQxYy00ZDU2LTk4MDgtN2Y1ZDZlZTE2NjBl",
+        "source_audio_url": "https://cdn1.suno.ai/07a5a8ad-241c-4d56-9808-7f5d6ee1660e.mp3",
+        "source_stream_audio_url": "https://cdn1.suno.ai/07a5a8ad-241c-4d56-9808-7f5d6ee1660e.mp3",
+        "image_url": "https://apiboxfiles.erweima.ai/MDdhNWE4YWQtMjQxYy00ZDU2LTk4MDgtN2Y1ZDZlZTE2NjBl.jpeg",
+        "source_image_url": "https://cdn2.suno.ai/image_07a5a8ad-241c-4d56-9808-7f5d6ee1660e.jpeg",
+        "title": "Champ's Glow",
+        "prompt": "create a rap about winning a boxing championship v2",
+        "tags": "bass-heavy, rap, hard-hitting, gritty",
+        "duration": 140.4,
+        "createTime": 1752146031905,
+        "model_name": "chirp-auk",
+        "lyrics": "[Verse]\nCame from the shadows, gloves laced, ready to fight\nEyes on the prize, gold belt shining in the light\nJab so quick, opponents hit the canvas fast\nRoy Jones spirit, leaving legends in the past\n\n[Chorus]\nChamp's glow, shining, never gonna fade\nFists like thunder, every punch a renegade\nOlympic dreams, I'm the king of the ring\nBow to the champ, hear the victory bells sing\n\n[Verse 2]\nCrowd's hyped up, feel the bass in the arena\nDodging every hook, moving slick like a dreamer\nFrom the streets to the top, built my name with grit\nEvery round I dominate, never take a hit\n\n[Bridge]\nGold in my veins, heart pumping like a drum\nWorld champ status, watch the kingdom come\nRoy Jones legacy, I'm carrying the flame\nUndisputed warrior, forever in the game"
+      }
+    ]
+  }
+}

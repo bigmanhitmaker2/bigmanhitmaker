@@ -1,0 +1,42 @@
+{
+  "code": 200,
+  "msg": "success",
+  "data": {
+    "callbackType": "complete",
+    "task_id": "bf87a3f380cfe99ebead50140384547a",
+    "data": [
+      {
+        "id": "72035709-1b4e-46a8-b231-18b779a329e0",
+        "audio_url": "https://apiboxfiles.erweima.ai/NzIwMzU3MDktMWI0ZS00NmE4LWIyMzEtMThiNzc5YTMyOWUw.mp3",
+        "stream_audio_url": "https://mfile.erweima.ai/NzIwMzU3MDktMWI0ZS00NmE4LWIyMzEtMThiNzc5YTMyOWUw",
+        "source_audio_url": "https://cdn1.suno.ai/72035709-1b4e-46a8-b231-18b779a329e0.mp3",
+        "source_stream_audio_url": "https://cdn1.suno.ai/72035709-1b4e-46a8-b231-18b779a329e0.mp3",
+        "image_url": "https://apiboxfiles.erweima.ai/NzIwMzU3MDktMWI0ZS00NmE4LWIyMzEtMThiNzc5YTMyOWUw.jpeg",
+        "source_image_url": "https://cdn2.suno.ai/image_72035709-1b4e-46a8-b231-18b779a329e0.jpeg",
+        "title": "Champ's Crown",
+        "prompt": "Create a rap about winning a boxing championship",
+        "tags": "gritty, hard-hitting, rap, boom-bap with heavy drums and sharp snares",
+        "duration": 114.8,
+        "createTime": 1752158808219,
+        "model_name": "chirp-auk",
+        "lyrics": "[Verse]\nFists blazing, I’m a human meteor\nBelt on my waist, I’m the new emperor\nCanvas soaked, dreams drip in the ring\nEach punch poetry, hear the leather sing\n\nBlood on my gloves, sweat in my eyes\nOpponents crumble, towers don’t rise\nCrowd roars louder than a lion’s growl\nEvery swing a sermon, every hit a vow\n\n[Chorus]\nChamp’s crown, heavy but it’s mine now\nRaised hands, bright lights, take a bow\nKnockout dreams, built from the ground\nThey tried to stop me, but look at me now\n\n[Verse 2]\nRopes my playground, dancing on the line\nFootwork Picasso, masterpiece design\nOpposition shaky, knees start to fold\nPressure in my veins, hotter than gold\n\nBell rings, my symphony’s composed\nLeft jab a comma, right hook the close\nSweat diamonds rain, flood the floor\nEvery fight a war, but I’m the victor for sure\n\n[Bridge]\nFelt the pain, the bruises, the weight\nPushed through the struggle, made my fate\nHaters talked loud, but I silenced the sound\nNow I’m the king, wearing the champ’s crown"
+      },
+      {
+        "id": "0705671f-dfa7-479b-8afa-53ccc4fa6cd8",
+        "audio_url": "https://apiboxfiles.erweima.ai/MDcwNTY3MWYtZGZhNy00NzliLThhZmEtNTNjY2M0ZmE2Y2Q4.mp3",
+        "stream_audio_url": "https://mfile.erweima.ai/MDcwNTY3MWYtZGZhNy00NzliLThhZmEtNTNjY2M0ZmE2Y2Q4",
+        "source_audio_url": "https://cdn1.suno.ai/0705671f-dfa7-479b-8afa-53ccc4fa6cd8.mp3",
+        "source_stream_audio_url": "https://cdn1.suno.ai/0705671f-dfa7-479b-8afa-53ccc4fa6cd8.mp3",
+        "image_url": "https://apiboxfiles.erweima.ai/MDcwNTY3MWYtZGZhNy00NzliLThhZmEtNTNjY2M0ZmE2Y2Q4.jpeg",
+        "source_image_url": "https://cdn2.suno.ai/image_0705671f-dfa7-479b-8afa-53ccc4fa6cd8.jpeg",
+        "title": "Champ's Crown",
+        "prompt": "Create a rap about winning a boxing championship",
+        "tags": "gritty, hard-hitting, rap, boom-bap with heavy drums and sharp snares",
+        "duration": 131.96,
+        "createTime": 1752158808219,
+        "model_name": "chirp-auk",
+        "lyrics": "[Verse]\nFists blazing, I’m a human meteor\nBelt on my waist, I’m the new emperor\nCanvas soaked, dreams drip in the ring\nEach punch poetry, hear the leather sing\n\nBlood on my gloves, sweat in my eyes\nOpponents crumble, towers don’t rise\nCrowd roars louder than a lion’s growl\nEvery swing a sermon, every hit a vow\n\n[Chorus]\nChamp’s crown, heavy but it’s mine now\nRaised hands, bright lights, take a bow\nKnockout dreams, built from the ground\nThey tried to stop me, but look at me now\n\n[Verse 2]\nRopes my playground, dancing on the line\nFootwork Picasso, masterpiece design\nOpposition shaky, knees start to fold\nPressure in my veins, hotter than gold\n\nBell rings, my symphony’s composed\nLeft jab a comma, right hook the close\nSweat diamonds rain, flood the floor\nEvery fight a war, but I’m the victor for sure\n\n[Bridge]\nFelt the pain, the bruises, the weight\nPushed through the struggle, made my fate\nHaters talked loud, but I silenced the sound\nNow I’m the king, wearing the champ’s crown"
+      }
+    ]
+  }
+}

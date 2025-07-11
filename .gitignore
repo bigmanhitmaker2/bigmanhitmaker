@@ -1,0 +1,9 @@
+__pycache__
+*.pyc
+appendonly.aof
+*.rdb
+.ipynb_checkpoints/
+*.log
+venv/
+output.mp3
+song.mp3

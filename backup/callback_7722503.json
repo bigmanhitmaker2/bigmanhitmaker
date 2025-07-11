@@ -1,0 +1,42 @@
+{
+  "code": 200,
+  "msg": "success",
+  "data": {
+    "callbackType": "complete",
+    "task_id": "7722503eb28c1006179a58e62fde69b7",
+    "data": [
+      {
+        "id": "b25db49b-4dff-4f3a-a58e-a9f3d83b7e6c",
+        "audio_url": "https://apiboxfiles.erweima.ai/YjI1ZGI0OWItNGRmZi00ZjNhLWE1OGUtYTlmM2Q4M3I3ZTZj.mp3",
+        "stream_audio_url": "https://mfile.erweima.ai/YjI1ZGI0OWItNGRmZi00ZjNhLWE1OGUtYTlmM2Q4M3I3ZTZj",
+        "source_audio_url": "https://cdn1.suno.ai/b25db49b-4dff-4f3a-a58e-a9f3d83b7e6c.mp3",
+        "source_stream_audio_url": "https://cdn1.suno.ai/b25db49b-4dff-4f3a-a58e-a9f3d83b7e6c.mp3",
+        "image_url": "https://apiboxfiles.erweima.ai/YjI1ZGI0OWItNGRmZi00ZjNhLWE1OGUtYTlmM2Q4M3I3ZTZj.jpeg",
+        "source_image_url": "https://cdn2.suno.ai/image_b25db49b-4dff-4f3a-a58e-a9f3d83b7e6c.jpeg",
+        "title": "Gloves Up, Crown Down",
+        "prompt": "create a rap about winning a boxing championship",
+        "tags": "hard-hitting, aggressive, bass-heavy, rap, with gritty synths and punchy drums",
+        "duration": 185.12,
+        "createTime": 1752140922730,
+        "model_name": "chirp-auk",
+        "lyrics": "[Verse]\nSteppin’ in the ring, gloves up, ready to clash\nFists like a storm, turn dreams to ash\nCrowd’s on edge, feel the heat, no escape\nChampionship belt, it’s my name they drape\n\n[Chorus]\nGloves up, crown down, I’m the king of the fight\nKnockout power, lightin’ up the night\nNo one’s stoppin’ me, I’m claimin’ the throne\nWorld champ vibes, I’m bad to the bone\n\n[Verse 2]\nJab to the left, hook to the dome\nOpponents crumble, sent back to their home\nSweat and blood, it’s the price of the game\nEvery punch I throw carves out my name\n\n[Bridge]\nRing’s my kingdom, I’m the ruler, no doubt\nOne swing, lights out, hear the crowd shout\nFrom the bottom to the top, I rose with the grind\nChampionship legacy, forever in my mind"
+      },
+      {
+        "id": "17b5c31f-4466-47f7-b0e9-6465b9ad97b2",
+        "audio_url": "https://apiboxfiles.erweima.ai/MTdiNWMzMWYtNDQ2Ni00N2Y3LWIwZTktNjQ2NWI5YWQ5N2Iy.mp3",
+        "stream_audio_url": "https://mfile.erweima.ai/MTdiNWMzMWYtNDQ2Ni00N2Y3LWIwZTktNjQ2NWI5YWQ5N2Iy",
+        "source_audio_url": "https://cdn1.suno.ai/17b5c31f-4466-47f7-b0e9-6465b9ad97b2.mp3",
+        "source_stream_audio_url": "https://cdn1.suno.ai/17b5c31f-4466-47f7-b0e9-6465b9ad97b2.mp3",
+        "image_url": "https://apiboxfiles.erweima.ai/MTdiNWMzMWYtNDQ2Ni00N2Y3LWIwZTktNjQ2NWI5YWQ5N2Iy.jpeg",
+        "source_image_url": "https://cdn2.suno.ai/image_17b5c31f-4466-47f7-b0e9-6465b9ad97b2.jpeg",
+        "title": "Gloves Up, Crown Down",
+        "prompt": "create a rap about winning a boxing championship",
+        "tags": "hard-hitting, aggressive, bass-heavy, rap, with gritty synths and punchy drums",
+        "duration": 139.92,
+        "createTime": 1752140922730,
+        "model_name": "chirp-auk",
+        "lyrics": "[Verse]\nSteppin’ in the ring, gloves up, ready to clash\nFists like a storm, turn dreams to ash\nCrowd’s on edge, feel the heat, no escape\nChampionship belt, it’s my name they drape\n\n[Chorus]\nGloves up, crown down, I’m the king of the fight\nKnockout power, lightin’ up the night\nNo one’s stoppin’ me, I’m claimin’ the throne\nWorld champ vibes, I’m bad to the bone\n\n[Verse 2]\nJab to the left, hook to the dome\nOpponents crumble, sent back to their home\nSweat and blood, it’s the price of the game\nEvery punch I throw carves out my name\n\n[Bridge]\nRing’s my kingdom, I’m the ruler, no doubt\nOne swing, lights out, hear the crowd shout\nFrom the bottom to the top, I rose with the grind\nChampionship legacy, forever in my mind"
+      }
+    ]
+  }
+}

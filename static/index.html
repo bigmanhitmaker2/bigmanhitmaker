@@ -824,7 +824,7 @@
                 }
             }catch(e){
                 console.error('Retry error:',e);
-                domElements.errorMessage.textContent=`Error: ${e.message}`;
+                domElements.errorMessage.textContent = 'Server error: Check logs or Auth0 config';
                 domElements.errorMessage.style.display='block';
                 domElements.progressContainer.style.display='none';
                 domElements.miniVisualizer.style.display='none';
@@ -1152,7 +1152,7 @@
                     }
                 }catch(e){
                     console.error('Error during song generation:',e);
-                    domElements.errorMessage.textContent=`Error: ${e.message}`;
+                    domElements.errorMessage.textContent = 'Server error: Check logs or Auth0 config';
                     domElements.errorMessage.style.display='block';
                     domElements.progressContainer.style.display='none';
                     domElements.miniVisualizer.style.display='none';

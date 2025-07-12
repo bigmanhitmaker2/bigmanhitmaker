@@ -67,6 +67,14 @@ async def init_redis_client():
 redis_client = None
 app = FastAPI()
 
+@app.on_event("startup")
+async def startup():
+    redis_url = os.getenv("REDIS_URL")  # Make sure this env var is set on Render!
+    if not redis_url:
+        raise Exception("REDIS_URL environment variable is not set!")
+    r = await redis.from_url(redis_url, encoding="utf-8", decode_responses=True)
+    await FastAPILimiter.init(r)
+
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
@@ -665,7 +673,7 @@ async def generate_song(
 
 # Retry task endpoint
 @app.post("/retry/{task_id}")
-async def retry_task(task_id: str, user: dict = Depends(get_current_user)):
+async def retry_task(task_id: str):
     task_data = None
     if redis_client:
         try:
@@ -732,8 +740,8 @@ async def retry_task(task_id: str, user: dict = Depends(get_current_user)):
 
 # Song generation endpoint
 @app.post("/generate", dependencies=[Depends(RateLimiter(times=100, seconds=3600))])
-async def generate_song_endpoint(request: SongRequest, user: dict = Depends(get_current_user)):
-    logger.info(f"Authenticated user: {user.get('sub')}")
+async def generate_song_endpoint(request: SongRequest):
+    # logger.info(f"Authenticated user: {user.get('sub')}")
     logger.info(f"Received generate request: {json.dumps(request.dict(), indent=2)}")
     if request.instrumental is None:
         request.instrumental = False
@@ -758,7 +766,7 @@ async def generate_song_endpoint(request: SongRequest, user: dict = Depends(get_
 
 # Status endpoint
 @app.get("/status/{task_id}")
-async def get_status(task_id: str, force: bool = False, user: dict = Depends(get_current_user)):
+async def get_status(task_id: str, force: bool = False):
     task_data = None
     if redis_client:
         try:
@@ -945,7 +953,7 @@ async def handle_callback(request: Request):
 
 # SSE endpoint for real-time status updates
 @app.get("/events/{task_id}")
-async def status_events(task_id: str, user: dict = Depends(get_current_user)):
+async def status_events(task_id: str):
     async def event_generator():
         if not redis_client and tasks is None:
             logger.error("Redis and in-memory storage not available for SSE")

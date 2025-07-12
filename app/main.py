@@ -741,7 +741,7 @@ async def retry_task(task_id: str):
 # Song generation endpoint
 @app.post("/generate", dependencies=[Depends(RateLimiter(times=100, seconds=3600))])
 async def generate_song_endpoint(request: SongRequest):
-    logger.info(f"Authenticated user: {user.get('sub')}")
+    # logger.info(f"Authenticated user: {user.get('sub')}")
     logger.info(f"Received generate request: {json.dumps(request.dict(), indent=2)}")
     if request.instrumental is None:
         request.instrumental = False

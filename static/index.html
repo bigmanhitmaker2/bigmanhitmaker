@@ -12,7 +12,6 @@
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     </noscript>
-    <script src="https://cdn.auth0.com/js/auth0-spa-js/2.1/auth0-spa-js.production.js"></script>
     <style>
         body{font-family:Poppins,sans-serif;margin:0;overflow-x:hidden;background:linear-gradient(to bottom right,#1e3a8a,#4b5e9a,#4b5e9a);background-size:400% 400%;animation:gradient-x 15s ease infinite}
         @keyframes gradient-x{0%,100%{background-position:left center}50%{background-position:right center}}
@@ -103,8 +102,6 @@
     </div>
     <div class="container">
         <div class="card">
-            <button id="login-button" class="cta-button mb-4" onclick="login()" aria-label="Login with Auth0">Login</button>
-            <button id="logout-button" class="cta-button mb-4" style="display:none;" onclick="logout()" aria-label="Logout">Logout</button>
             <form id="song-form" aria-labelledby="form-title">
                 <h2 id="form-title" class="sr-only">Song Generation Form</h2>
                 <div class="mt-4">
@@ -393,50 +390,13 @@
             errorMessage:document.getElementById('error-message'),
             results:document.getElementById('results'),
             instrumentsSelect:document.getElementById('instruments'),
-            form:document.getElementById('song-form'),
-            loginButton:document.getElementById('login-button'),
-            logoutButton:document.getElementById('logout-button')
+            form:document.getElementById('song-form')
         };
         let taskLyricsMap=new Map();
         let isGenerating=false;
         let currentTaskId=null;
         let eventSource=null;
-        let isAuthenticated = false;
         const proModeFields=['instrumental-label','title-label','negative-tags-label'];
-        let auth0;
-        async function initAuth0() {
-            auth0 = await auth0.createAuth0Client({
-                domain: 'YOUR_AUTH0_DOMAIN',  // Replace with your Auth0 domain
-                clientId: 'YOUR_CLIENT_ID',  // Replace with your Auth0 client ID
-                authorizationParams: { audience: 'YOUR_AUTH0_AUDIENCE' }  // Replace with your Auth0 audience
-            });
-            const isAuth = await auth0.isAuthenticated();
-            if (isAuth) {
-                isAuthenticated = true;
-                domElements.loginButton.style.display = 'none';
-                domElements.logoutButton.style.display = 'block';
-            } else {
-                isAuthenticated = false;
-                domElements.loginButton.style.display = 'block';
-                domElements.logoutButton.style.display = 'none';
-            }
-        }
-        async function login() {
-            await auth0.loginWithRedirect();
-        }
-        async function logout() {
-            await auth0.logout({ returnTo: window.location.origin });
-        }
-        async function getToken() {
-            try {
-                return await auth0.getAccessTokenSilently();
-            } catch (e) {
-                if (e.error === 'login_required') {
-                    login();
-                }
-                throw e;
-            }
-        }
         function updateFieldVisibility(){
             if(!checkDOMElements({
                 proModeToggle:domElements.proModeToggle,
@@ -598,7 +558,7 @@
                 domElements.errorLyrics.style.display='none';
                 domElements.errorLyrics.textContent='';
             }
-            domElements.generateButton.disabled=!isValid||isGenerating||!isAuthenticated;
+            domElements.generateButton.disabled=!isValid||isGenerating;
         }
         async function sendAnalytics(event,data){
             try{
@@ -795,12 +755,10 @@
                     retryButton.classList.add('loading');
                     retryButton.disabled=true;
                 }
-                const token = await getToken();
                 const response=await fetch(`https://www.bigmanhitmaker.com/retry/${taskId}`,{
                     method:'POST',
                     headers:{
-                        'Content-Type':'application/json',
-                        'Authorization': `Bearer ${token}`
+                        'Content-Type':'application/json'
                     }
                 });
                 const result=await response.json();
@@ -824,7 +782,7 @@
                 }
             }catch(e){
                 console.error('Retry error:',e);
-                domElements.errorMessage.textContent = 'Server error: Check logs or Auth0 config';
+                domElements.errorMessage.textContent=`Error: ${e.message}`;
                 domElements.errorMessage.style.display='block';
                 domElements.progressContainer.style.display='none';
                 domElements.miniVisualizer.style.display='none';
@@ -1018,27 +976,30 @@
                 sendAnalytics('lyrics_toggle_error',{trackId});
             }
         }
-     function downloadFile(url, filename) {
-         console.log(`Downloading file: ${url} as ${filename}`);
-         const a = document.createElement('a');
-         a.style.display = 'none'; // Hide element
-         a.href = url;
-         a.setAttribute('download', filename);
-
-         // Required for Firefox
-         document.body.appendChild(a);
-
-         a.click();
-
-         // Clean up after download for blob URLs (optional but good practice)
-         setTimeout(() => {
-             document.body.removeChild(a);
-             // Revoke only if it's a blob/object URL (startsWith 'blob:')
-             if (url.startsWith('blob:')) {
-                 URL.revokeObjectURL(url);
-             }
-         }, 100); // Delay ensures the click is processed
-     }
+        async function downloadFile(url, filename) {
+            try {
+                console.log(`Downloading file: ${url} as ${filename}`);
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch: ${response.statusText}`);
+                }
+                const blob = await response.blob();
+                const objectUrl = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = objectUrl;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                setTimeout(() => {
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(objectUrl);
+                }, 100);
+            } catch (e) {
+                console.error('Download error:', e);
+                alert('Failed to download file. Please try again.');
+            }
+        }
         function downloadLyrics(trackId,title,lyrics){
             if(lyrics){
                 console.log(`Downloading lyrics for track ${trackId}, title: ${title}`);
@@ -1057,7 +1018,6 @@
         }
         if(domElements.proModeToggle){
             domElements.proModeToggle.addEventListener('change',()=>{
-                console.log('Pro Mode toggled:',domElements.proModeToggle.checked);
                 updateFieldVisibility();
             });
         }else{
@@ -1066,7 +1026,6 @@
         }
         if(domElements.instrumentalToggle){
             domElements.instrumentalToggle.addEventListener('change',()=>{
-                console.log('Instrumental toggled:',domElements.instrumentalToggle.checked);
                 updateFieldVisibility();
             });
         }else{
@@ -1105,10 +1064,6 @@
                     console.log('Form submission blocked: already generating');
                     return;
                 }
-                if (!isAuthenticated) {
-                    alert('Please login to generate songs.');
-                    return;
-                }
                 const now=Date.now();
                 if(now-lastSubmissionTime<5000){
                     console.log('Form submission blocked: rate limit exceeded');
@@ -1144,12 +1099,10 @@
                 console.log('Form data to be sent:',JSON.stringify(data,null,2));
                 await sendAnalytics('form_submit',data);
                 try{
-                    const token = await getToken();
                     const response=await fetch('https://www.bigmanhitmaker.com/generate',{
                         method:'POST',
                         headers:{
-                            'Content-Type':'application/json',
-                            'Authorization': `Bearer ${token}`
+                            'Content-Type':'application/json'
                         },
                         body:JSON.stringify(data)
                     });
@@ -1166,7 +1119,7 @@
                     }
                 }catch(e){
                     console.error('Error during song generation:',e);
-                    domElements.errorMessage.textContent = 'Server error: Check logs or Auth0 config';
+                    domElements.errorMessage.textContent=`Error: ${e.message}`;
                     domElements.errorMessage.style.display='block';
                     domElements.progressContainer.style.display='none';
                     domElements.miniVisualizer.style.display='none';
@@ -1213,8 +1166,7 @@
                 console.log('Closed previous SSE connection');
             }
         }
-        document.addEventListener('DOMContentLoaded',async()=>{
-            await initAuth0();
+        document.addEventListener('DOMContentLoaded',()=>{
             if(checkDOMElements(domElements,'DOMContentLoaded initialization')){
                 updateFieldVisibility();
                 resetUI();

@@ -14,6 +14,12 @@ import redis.asyncio as redis
 import hashlib
 import time
 import re
+from fastapi_limiter import FastAPILimiter
+from fastapi_limiter.depends import RateLimiter
+from fastapi import Depends
+from fastapi.security import OAuth2PasswordBearer
+from jose import JWTError, jwt
+from fastapi import Security, HTTPException, status
 
 # Set up logging
 logging.basicConfig(
@@ -84,7 +90,7 @@ async def log_requests(request: Request, call_next):
     logger.info(f"Response status: {response.status_code}")
     return response
 
-# Initialize Redis on startup
+# Initialize Redis and limiter on startup
 @app.on_event("startup")
 async def startup_event():
     global redis_client, tasks
@@ -92,11 +98,43 @@ async def startup_event():
     if redis_client is None:
         tasks = {}  # In-memory fallback
     else:
+        await FastAPILimiter.init(redis_client)  # Init limiter with Redis
         try:
             await redis_client.config_set("notify-keyspace-events", "KEA")
             logger.info("Redis keyspace notifications enabled")
         except Exception as e:
             logger.error(f"Failed to enable Redis keyspace notifications: {str(e)}")
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")  # For bearer tokens
+
+# Token validation function
+async def get_current_user(token: str = Depends(oauth2_scheme)):
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        jwks_url = f"https://{os.getenv('AUTH0_DOMAIN')}/.well-known/jwks.json"
+        # Fetch JWKS (cache in production)
+        async with httpx.AsyncClient() as client:
+            jwks_response = await client.get(jwks_url)
+            jwks = jwks_response.json()
+        # Decode and validate JWT
+        header = jwt.get_unverified_header(token)
+        rsa_key = next((k for k in jwks["keys"] if k["kid"] == header["kid"]), None)
+        if not rsa_key:
+            raise credentials_exception
+        payload = jwt.decode(
+            token,
+            rsa_key,
+            algorithms=["RS256"],
+            audience=os.getenv("AUTH0_AUDIENCE"),
+            issuer=f"https://{os.getenv('AUTH0_DOMAIN')}/",
+        )
+        return payload  # User info from token
+    except JWTError:
+        raise credentials_exception
 
 # Mount static files
 app.mount("/static", StaticFiles(directory="/app/static"), name="static")
@@ -626,7 +664,7 @@ async def generate_song(
 
 # Retry task endpoint
 @app.post("/retry/{task_id}")
-async def retry_task(task_id: str):
+async def retry_task(task_id: str, user: dict = Depends(get_current_user)):
     task_data = None
     if redis_client:
         try:
@@ -692,8 +730,9 @@ async def retry_task(task_id: str):
         return result
 
 # Song generation endpoint
-@app.post("/generate")
-async def generate_song_endpoint(request: SongRequest):
+@app.post("/generate", dependencies=[Depends(RateLimiter(times=100, seconds=3600))])
+async def generate_song_endpoint(request: SongRequest, user: dict = Depends(get_current_user)):
+    logger.info(f"Authenticated user: {user.get('sub')}")
     logger.info(f"Received generate request: {json.dumps(request.dict(), indent=2)}")
     if request.instrumental is None:
         request.instrumental = False
@@ -718,7 +757,7 @@ async def generate_song_endpoint(request: SongRequest):
 
 # Status endpoint
 @app.get("/status/{task_id}")
-async def get_status(task_id: str, force: bool = False):
+async def get_status(task_id: str, force: bool = False, user: dict = Depends(get_current_user)):
     task_data = None
     if redis_client:
         try:
@@ -905,7 +944,7 @@ async def handle_callback(request: Request):
 
 # SSE endpoint for real-time status updates
 @app.get("/events/{task_id}")
-async def status_events(task_id: str):
+async def status_events(task_id: str, user: dict = Depends(get_current_user)):
     async def event_generator():
         if not redis_client and tasks is None:
             logger.error("Redis and in-memory storage not available for SSE")

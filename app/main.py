@@ -52,7 +52,7 @@ async def init_redis_client():
         return None
     for attempt in range(max_retries):
         try:
-            redis_client = redis.Redis.from_url(redis_url, decode_responses=True)
+            redis_client = redis.Redis.from_url(redis_url, decode_responses=True, ssl_cert_reqs=None)
             await redis_client.ping()
             logger.info("Redis client initialized successfully with Upstash")
             return redis_client
@@ -66,6 +66,14 @@ async def init_redis_client():
 
 redis_client = None
 app = FastAPI()
+
+@app.on_event("startup")
+async def startup():
+    redis_url = os.getenv("REDIS_URL")  # Make sure this env var is set on Render!
+    if not redis_url:
+        raise Exception("REDIS_URL environment variable is not set!")
+    r = await redis.from_url(redis_url, encoding="utf-8", decode_responses=True)
+    await FastAPILimiter.init(r)
 
 # Add CORS middleware
 app.add_middleware(
@@ -215,6 +223,7 @@ class CallbackTrack(BaseModel):
     createTime: Optional[int] = None
     model_name: Optional[str] = None
     lyrics: Optional[str] = None
+    model_config = {"protected_namespaces": ()}
 
 class CallbackInnerData(BaseModel):
     callbackType: str

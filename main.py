@@ -52,7 +52,7 @@ async def init_redis_client():
         return None
     for attempt in range(max_retries):
         try:
-            redis_client = redis.Redis.from_url(redis_url, decode_responses=True)
+            redis_client = redis.Redis.from_url(redis_url, decode_responses=True, ssl_cert_reqs=None)
             await redis_client.ping()
             logger.info("Redis client initialized successfully with Upstash")
             return redis_client
@@ -215,6 +215,7 @@ class CallbackTrack(BaseModel):
     createTime: Optional[int] = None
     model_name: Optional[str] = None
     lyrics: Optional[str] = None
+    model_config = {"protected_namespaces": ()}
 
 class CallbackInnerData(BaseModel):
     callbackType: str

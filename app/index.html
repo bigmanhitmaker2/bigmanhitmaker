@@ -824,7 +824,7 @@
                 }
             }catch(e){
                 console.error('Retry error:',e);
-                domElements.errorMessage.textContent=`Error: ${e.message}`;
+                domElements.errorMessage.textContent = 'Server error: Check logs or Auth0 config';
                 domElements.errorMessage.style.display='block';
                 domElements.progressContainer.style.display='none';
                 domElements.miniVisualizer.style.display='none';
@@ -1018,13 +1018,27 @@
                 sendAnalytics('lyrics_toggle_error',{trackId});
             }
         }
-        function downloadFile(url,filename){
-            console.log(`Downloading file: ${url} as ${filename}`);
-            const a=document.createElement('a');
-            a.href=url;
-            a.download=filename;
-            a.click();
-        }
+     function downloadFile(url, filename) {
+         console.log(`Downloading file: ${url} as ${filename}`);
+         const a = document.createElement('a');
+         a.style.display = 'none'; // Hide element
+         a.href = url;
+         a.setAttribute('download', filename);
+
+         // Required for Firefox
+         document.body.appendChild(a);
+
+         a.click();
+
+         // Clean up after download for blob URLs (optional but good practice)
+         setTimeout(() => {
+             document.body.removeChild(a);
+             // Revoke only if it's a blob/object URL (startsWith 'blob:')
+             if (url.startsWith('blob:')) {
+                 URL.revokeObjectURL(url);
+             }
+         }, 100); // Delay ensures the click is processed
+     }
         function downloadLyrics(trackId,title,lyrics){
             if(lyrics){
                 console.log(`Downloading lyrics for track ${trackId}, title: ${title}`);
@@ -1152,7 +1166,7 @@
                     }
                 }catch(e){
                     console.error('Error during song generation:',e);
-                    domElements.errorMessage.textContent=`Error: ${e.message}`;
+                    domElements.errorMessage.textContent = 'Server error: Check logs or Auth0 config';
                     domElements.errorMessage.style.display='block';
                     domElements.progressContainer.style.display='none';
                     domElements.miniVisualizer.style.display='none';

@@ -1080,7 +1080,7 @@ async def status_events(task_id: str):
     )
 
 # Stripe setup
-stripe.api_key = "os.getenv("STRIPE_SECRET_KEY")"
+stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
 # Stripe Secret API Key
 STRIPE_WEBHOOK_SECRET = "whsec_8VPPyyNkkdDywKlh2ScJuyNSxQ27tq04"  # Stripe webhook signing secret
 

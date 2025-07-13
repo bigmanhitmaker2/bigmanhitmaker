@@ -17,9 +17,12 @@ import re
 from fastapi_limiter import FastAPILimiter
 from fastapi_limiter.depends import RateLimiter
 from fastapi import Depends
-from fastapi.security import OAuth2PasswordBearer
-from jose import JWTError, jwt
-from fastapi import Security, HTTPException, status
+from jose import jwt
+from fastapi import HTTPException, status
+import stripe
+import asyncpg
+from uuid import uuid4
+from datetime import datetime
 
 # Set up logging
 logging.basicConfig(
@@ -38,8 +41,11 @@ API_URL = os.getenv("API_BASE_URL") or os.getenv("SUNO_API_BASE_URL", "https://a
 API_KEY = os.getenv("API_TOKEN") or os.getenv("SUNO_API_KEY")
 REDIS_URL = os.getenv("REDIS_URL")
 DEFAULT_CALLBACK_URL = os.getenv("CALLBACK_URL", "https://www.bigmanhitmaker.com/callback")
+DATABASE_URL = os.getenv("DATABASE_URL")
 if not API_KEY:
     logger.warning("API_TOKEN/SUNO_API_KEY not set. API calls may fail.")
+if not DATABASE_URL:
+    logger.warning("DATABASE_URL not set. Database operations may fail.")
 
 # Initialize Redis client with retry mechanism
 async def init_redis_client():
@@ -101,7 +107,7 @@ async def log_requests(request: Request, call_next):
 # Initialize Redis and limiter on startup
 @app.on_event("startup")
 async def startup_event():
-    global redis_client, tasks
+    global redis_client, tasks, db_pool
     redis_client = await init_redis_client()
     if redis_client is None:
         tasks = {}  # In-memory fallback
@@ -113,36 +119,50 @@ async def startup_event():
         except Exception as e:
             logger.error(f"Failed to enable Redis keyspace notifications: {str(e)}")
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")  # For bearer tokens
+    # Initialize DB pool
+    db_pool = await asyncpg.create_pool(DATABASE_URL)
 
-# Token validation function
-async def get_current_user(token: str = Depends(oauth2_scheme)):
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
+@app.on_event("shutdown")
+async def shutdown_event():
+    await db_pool.close()
+
+# Supabase JWT Validation
+SUPABASE_PROJECT_ID = "aafkyubzfmrlgiqhcnvp"
+JWKS_URL = f"https://{SUPABASE_PROJECT_ID}.supabase.co/auth/v1/keys"
+
+async def get_current_user(request: Request):
+    auth = request.headers.get("Authorization")
+    if not auth:
+        raise HTTPException(status_code=401, detail="Missing Authorization header")
+
+    token = auth.replace("Bearer ", "")
+    
+    # Get JWKS
+    async with httpx.AsyncClient() as client:
+        resp = await client.get(JWKS_URL)
+        jwks = resp.json()
+    
     try:
-        jwks_url = f"https://{os.getenv('AUTH0_DOMAIN')}/.well-known/jwks.json"
-        # Fetch JWKS (cache in production)
-        async with httpx.AsyncClient() as client:
-            jwks_response = await client.get(jwks_url)
-            jwks = jwks_response.json()
-        # Decode and validate JWT
+        # Validate the JWT using Supabase's public key
         header = jwt.get_unverified_header(token)
-        rsa_key = next((k for k in jwks["keys"] if k["kid"] == header["kid"]), None)
-        if not rsa_key:
-            raise credentials_exception
-        payload = jwt.decode(
-            token,
-            rsa_key,
-            algorithms=["RS256"],
-            audience=os.getenv("AUTH0_AUDIENCE"),
-            issuer=f"https://{os.getenv('AUTH0_DOMAIN')}/",
-        )
-        return payload  # User info from token
-    except JWTError:
-        raise credentials_exception
+        key = next(k for k in jwks["keys"] if k["kid"] == header["kid"])
+        payload = jwt.decode(token, key, algorithms=["RS256"], audience=None)
+        return payload
+    except Exception as e:
+        raise HTTPException(status_code=401, detail=f"Invalid token: {str(e)}")
+
+# Credit System Functions
+async def give_initial_credits(user_id: str):
+    key = f"user:{user_id}:credits"
+    if not await redis_client.exists(key):
+        await redis_client.set(key, 1)
+
+async def check_and_deduct_credit(user_id: str):
+    key = f"user:{user_id}:credits"
+    credits = await redis_client.get(key)
+    if not credits or int(credits) < 1:
+        raise HTTPException(status_code=403, detail="Not enough credits")
+    await redis_client.decr(key)
 
 # Mount static files
 app.mount("/static", StaticFiles(directory="/app/static"), name="static")
@@ -740,8 +760,10 @@ async def retry_task(task_id: str):
 
 # Song generation endpoint
 @app.post("/generate", dependencies=[Depends(RateLimiter(times=100, seconds=3600))])
-async def generate_song_endpoint(request: SongRequest):
-    # logger.info(f"Authenticated user: {user.get('sub')}")
+async def generate_song_endpoint(request: SongRequest, user: dict = Depends(get_current_user)):
+    user_id = user["sub"]
+    await give_initial_credits(user_id)
+    await check_and_deduct_credit(user_id)
     logger.info(f"Received generate request: {json.dumps(request.dict(), indent=2)}")
     if request.instrumental is None:
         request.instrumental = False
@@ -1056,3 +1078,90 @@ async def status_events(task_id: str):
             "Content-Encoding": "identity"
         }
     )
+
+# Stripe setup
+stripe.api_key = "os.getenv("STRIPE_SECRET_KEY")"
+# Stripe Secret API Key
+STRIPE_WEBHOOK_SECRET = "whsec_8VPPyyNkkdDywKlh2ScJuyNSxQ27tq04"  # Stripe webhook signing secret
+
+@app.post("/create-checkout-session")
+async def create_checkout_session(user: dict = Depends(get_current_user)):
+    YOUR_DOMAIN = "https://www.bigmanhitmaker.com"  # Domain
+    try:
+        checkout_session = stripe.checkout.Session.create(
+            payment_method_types=['card'],
+            mode='payment',
+            line_items=[
+                {
+                    'price': 'price_XXXXXXXXXXXX',  # replace with your Price ID
+                    'quantity': 1,
+                },
+            ],
+            customer_email=user["email"],
+            success_url=f"{YOUR_DOMAIN}/payment-success?session_id={{CHECKOUT_SESSION_ID}}",
+            cancel_url=f"{YOUR_DOMAIN}/payment-cancelled",
+        )
+        return {"url": checkout_session.url}
+    except Exception as e:
+        return JSONResponse(status_code=500, content={"error": str(e)})
+
+@app.post("/webhook")
+async def stripe_webhook(request: Request):
+    payload = await request.body()
+    sig_header = request.headers.get("stripe-signature")
+
+    try:
+        event = stripe.Webhook.construct_event(payload, sig_header, STRIPE_WEBHOOK_SECRET)
+    except ValueError:
+        return JSONResponse(status_code=400, content={"error": "Invalid payload"})
+    except stripe.error.SignatureVerificationError:
+        return JSONResponse(status_code=400, content={"error": "Invalid signature"})
+
+    if event["type"] == "checkout.session.completed":
+        session = event["data"]["object"]
+        email = session["customer_email"]
+        
+        # Optional: Lookup user by email in Supabase (via Supabase Admin API)
+        # For now assume user_id = email
+        user_id = email
+        await redis_client.incrby(f"user:{user_id}:credits", 5)
+
+    return {"status": "ok"}
+
+# Save song to DB
+async def save_song_to_db(user_id: str, title: str, prompt: str, preview_url: str, full_url: str, unlocked: bool = False):
+    async with db_pool.acquire() as conn:
+        query = """
+        INSERT INTO songs (id, user_id, title, prompt, preview_url, full_url, unlocked, created_at)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+        """
+        values = (str(uuid4()), user_id, title, prompt, preview_url, full_url, unlocked, datetime.utcnow())
+        await conn.execute(query, *values)
+
+# My songs endpoint
+@app.get("/my-songs")
+async def get_my_songs(user: dict = Depends(get_current_user)):
+    user_id = user["sub"]
+    async with db_pool.acquire() as conn:
+        query = "SELECT * FROM songs WHERE user_id = $1 ORDER BY created_at DESC"
+        songs = await conn.fetch(query, user_id)
+    return [dict(song) for song in songs]
+
+# Unlock song endpoint
+@app.post("/unlock-song/{song_id}")
+async def unlock_song(song_id: str, user: dict = Depends(get_current_user)):
+    user_id = user["sub"]
+
+    async with db_pool.acquire() as conn:
+        # Check if user owns this song
+        query = "SELECT * FROM songs WHERE id = $1 AND user_id = $2"
+        song = await conn.fetchrow(query, song_id, user_id)
+        if not song:
+            raise HTTPException(403, "Song not found or not yours")
+
+        # Check and deduct credits
+        await check_and_deduct_credit(user_id)
+
+        # Unlock the song
+        await conn.execute("UPDATE songs SET unlocked = TRUE WHERE id = $1", song_id)
+    return {"message": "Song unlocked!"}

@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bigman Hitmaker+</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" as="style" onload="this.rel='stylesheet'">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" as="style" onload="this.rel='stylesheet'">
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico"/>
+    <noscript>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    </noscript>
+    <style>
+        body{font-family:Poppins,sans-serif;margin:0;overflow-x:hidden;background:linear-gradient(to bottom right,#1e3a8a,#4b5e9a,#4b5e9a);background-size:400% 400%;animation:gradient-x 15s ease infinite}
+        @keyframes gradient-x{0%,100%{background-position:left center}50%{background-position:right center}}
+        .hero{padding:4rem 1rem;text-align:center;position:relative;overflow:hidden;background:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg==') no-repeat center center;background-blend-mode:overlay}
+        .hero::before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%233182ce" fill-opacity="0.1" d="M0,128L48,138.7C96,149,192,171,288,186.7C384,203,480,213,576,202.7C672,192,768,160,864,149.3C960,139,1056,149,1152,149.3C1248,149,1344,139,1392,133.3L1440,128V320H1392C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320H0V128Z"></path></svg>');background-size:cover;background-repeat:no-repeat;z-index:0}
+        .hero-content{position:relative;z-index:1}
+        h1{font-size:3.5rem;font-weight:700;background:linear-gradient(45deg,#60a5fa,#a3bffa);-webkit-background-clip:text;background-clip:text;color:transparent;animation:pulse 2s infinite;display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:1rem;text-shadow:0 0 15px #60a5fa,0 0 30px #a3bffa}
+        @keyframes pulse{0%,100%{text-shadow:0 0 15px #60a5fa,0 0 30px #a3bffa}50%{text-shadow:0 0 25px #60a5fa,0 0 50px #a3bffa}}
+        @keyframes emojiGlow{0%,100%{text-shadow:0 0 5px #facc15}50%{text-shadow:0 0 20px #fbbf24}}
+        .headline-hook{font-size:1.75rem;font-weight:600;color:#fff;margin:1rem 0 .5rem;display:flex;align-items:center;justify-content:center;gap:.5rem;animation:fadeInUp 1s ease forwards}
+        .headline-hook span{font-size:2rem;animation:emojiGlow 1.5s ease-in-out infinite}
+        .headline-subtext{font-size:1rem;color:#a0aec0;margin-bottom:1.5rem}
+        @keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+        .cta-button{background:linear-gradient(90deg,#34d399,#6ee7b7);color:#fff;padding:1rem 2rem;font-size:1.25rem;font-weight:600;border-radius:9999px;transition:transform .2s,background .2s;cursor:pointer}
+        .cta-button:hover:not(:disabled){transform:scale(1.05);background:linear-gradient(90deg,#2dd4bf,#6ee7b7)}
+        .floating-emoji{position:fixed;font-size:1.5rem;animation:bounce 2s infinite;z-index:10}
+        @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+        .container{max-width:48rem;margin:0 auto;padding:1rem;text-align:center}
+        .card{background:rgba(255,255,255,.1);backdrop-filter:blur(10px);border-radius:1rem;padding:1.5rem;margin-top:-2rem;border:1px solid rgba(99,102,241,.5);box-shadow:0 0 15px rgba(96,165,250,.5);transition:border-color .3s,box-shadow .3s}
+        .card:hover{border-color:rgba(236,72,153,.5);box-shadow:0 0 20px rgba(236,72,153,.5)}
+        .form-group{margin-bottom:1.5rem;transition:all .3s ease-in-out;max-height:1000px;opacity:1}
+        .form-group.hidden{display:none}
+        .form-group label{display:block;font-size:.875rem;font-weight:500;color:#a0aec0;margin-bottom:.5rem;text-align:left;position:relative}
+        .form-group label:hover::after{content:attr(title);position:absolute;left:0;bottom:-1.5rem;background:rgba(0,0,0,.7);color:#fff;padding:.25rem .5rem;border-radius:.25rem;font-size:.75rem;white-space:nowrap}
+        select,textarea,input{width:100%;background:#4b5563;border:1px solid #6b7280;border-radius:.5rem;padding:.75rem;color:#e2e8f0;transition:border-color .2s}
+        select:focus,textarea:focus,input:focus{outline:none;border-color:#60a5fa}
+        select{height:2.5rem}
+        textarea.prompt-input,textarea.lyrics-input{min-height:12rem;background:#000;color:#2ecc71;font-family:'Courier New',monospace;padding:.75rem;border-radius:.5rem;border:1px solid #27ae60}
+        textarea.prompt-input:focus,textarea.lyrics-input:focus{border-color:#27ae60}
+        textarea.prompt-input::placeholder,textarea.lyrics-input::placeholder{color:#27ae60}
+        .generate-button{background:linear-gradient(90deg,#10b981,#34d399);color:#fff;padding:1rem;font-size:1.125rem;font-weight:700;border-radius:.5rem;width:100%;transition:transform .2s,background .2s;position:relative;overflow:hidden}
+        .generate-button:hover:not(:disabled){transform:scale(1.05);background:linear-gradient(90deg,#059669,#34d399)}
+        .generate-button:disabled{background:#6b7280;cursor:not-allowed;transform:none}
+        .generate-button.loading::after{content:'';display:inline-block;border:3px solid #fff;border-top:3px solid transparent;border-radius:50%;width:16px;height:16px;animation:spin 1s linear infinite;position:absolute;right:1rem;top:50%;transform:translateY(-50%)}
+        .progress-container{width:100%;background:#4b5563;border-radius:.5rem;overflow:hidden;margin-top:1rem;position:relative;display:none}
+        .progress-bar{height:.75rem;background:linear-gradient(to right,#10b981,#34d399);width:0;transition:width .5s ease-in-out}
+        .glow-progress{animation:pulseGlow 2s ease-in-out infinite;box-shadow:0 0 10px rgba(34,197,94,.6)}
+        @keyframes pulseGlow{0%,100%{box-shadow:0 0 10px rgba(34,197,94,.6)}50%{box-shadow:0 0 20px rgba(34,197,94,1)}}
+        .visualizer{display:flex;flex-direction:row;align-items:flex-end;gap:.25rem;margin-top:1rem;height:1.5rem}
+        .visualizer-bar{width:.25rem;background-color:#10b981;animation:bounce 1.2s infinite ease-in-out alternate}
+        .track-visualizer{display:flex;flex-direction:row;gap:.25rem;justify-content:center;margin-top:.5rem}
+        .track-visualizer .visualizer-bar:nth-child(1){animation-delay:0ms}
+        .track-visualizer .visualizer-bar:nth-child(2){animation-delay:100ms}
+        .track-visualizer .visualizer-bar:nth-child(3){animation-delay:200ms}
+        .mini-visualizer{display:flex;flex-direction:row;justify-content:center;margin-top:.5rem;gap:.25rem;display:none}
+        .spinner{border:4px solid #f3f3f3;border-top:4px solid #10b981;border-radius:50%;width:20px;height:20px;animation:spin 1s linear infinite;margin:0 auto;display:none}
+        @keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+        .audio-container{margin-top:1rem}
+        .chip{background:#4b5563;padding:.25rem .75rem;border-radius:9999px;display:inline-flex;align-items:center;margin-right:.5rem;margin-bottom:.5rem}
+        .chip-remove{cursor:pointer;margin-left:.5rem;color:#ef4444}
+        .error{color:#ef4444;font-size:.875rem;margin-top:.5rem;display:none}
+        .field-error{color:#ef4444;font-size:.75rem;display:none;margin-top:.5rem}
+        .friendly-message{color:#10b981;display:flex;align-items:center;gap:.5rem;margin-top:.5rem;display:none}
+        .stalled-message{color:#f59e0b;display:flex;align-items:center;gap:.5rem;margin-top:.5rem;display:none}
+        .retry-button{background:linear-gradient(90deg,#f59e0b,#fbbf24);color:#fff;padding:.5rem 1rem;font-size:1rem;font-weight:600;border-radius:.5rem;transition:transform .2s,background .2s;cursor:pointer}
+        .retry-button:hover:not(:disabled){transform:scale(1.05);background:linear-gradient(90deg,#d97706,#facc15)}
+        .retry-button:disabled{background:#6b7280;cursor:not-allowed;transform:none}
+        .retry-button.loading::after{content:'';display:inline-block;border:3px solid #fff;border-top:3px solid transparent;border-radius:50%;width:16px;height:16px;animation:spin 1s linear infinite;margin-left:.5rem}
+        .track-card{background:#1f2937;padding:1rem;border-radius:.75rem;border:1px solid #34d399;box-shadow:0 4px 6px rgba(0,0,0,.1);transition:box-shadow .3s,border-color .3s;margin-bottom:1rem}
+        .track-card:hover{border-color:#ec4899;box-shadow:0 0 20px rgba(236,72,153,.5)}
+        .track-card.pending{border-color:#a0aec0;opacity:.7}
+        .track-card.new{animation:highlight 2s ease-out}
+        @keyframes highlight{0%{background:rgba(236,72,153,.3)}100%{background:#1f2937}}
+        .download-button{transition:transform .2s,background .2s}
+        .warning-message{color:#f59e0b;font-size:.875rem;margin-top:.5rem;display:none}
+        .char-count{color:#a0aec0;font-size:.75rem;margin-top:.25rem;text-align:right}
+        .toggle-switch{position:relative;display:inline-block;width:60px;height:34px}
+        .toggle-switch input{opacity:0;width:0;height:0}
+        .slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background-color:#4b5563;transition:.4s;border-radius:34px}
+        .slider:before{position:absolute;content:"";height:26px;width:26px;left:4px;bottom:4px;background-color:#fff;transition:.4s;border-radius:50%}
+        input:checked+.slider{background:linear-gradient(90deg,#10b981,#34d399)}
+        input:checked+.slider:before{transform:translateX(26px)}
+        .toggle-label{display:inline-block;font-size:.875rem;color:#a0aec0;margin-left:.5rem}
+        @media (max-width:640px){.container{padding:.5rem;margin-left:auto;margin-right:auto}h1{font-size:2rem}.cta-button,.generate-button,.retry-button,.download-button{width:100%;padding:.75rem;font-size:.875rem}select,textarea,input{width:100%}.card{margin-top:-1rem;padding:1rem}.track-card{padding:.75rem}.visualizer-bar{width:.2rem}.track-visualizer .visualizer-bar{width:.2rem}.mini-visualizer div{width:.2rem}.headline-hook{font-size:1.25rem}.headline-hook span{font-size:1.5rem}.headline-subtext{font-size:.875rem}.download-buttons{flex-direction:column}.toggle-switch{width:50px;height:28px}.slider:before{height:20px;width:20px;left:4px;bottom:4px}input:checked+.slider:before{transform:translateX(22px)}}
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <div class="hero-content">
+            <h1>Bigman Hitmaker+ <i class="fas fa-wave-square text-2xl text-green-400" aria-hidden="true"></i></h1>
+            <div class="headline-hook">From Zero to <span>🔥</span> in Under a Minute.</div>
+            <p class="headline-subtext">Describe your song idea or provide lyrics. Hit generate. Get a hit track in seconds.</p>
+            <button class="cta-button" onclick="scrollToPrompt()" aria-label="Get Started with Song Generation">Get Started</button>
+        </div>
+        <div class="floating-emoji" style="top:10%;left:10%;" aria-hidden="true">🎶</div>
+        <div class="floating-emoji" style="top:20%;right:15%;" aria-hidden="true">🎧</div>
+        <div class="floating-emoji" style="bottom:20%;left:20%;" aria-hidden="true">🎵</div>
+    </div>
+    <div class="container">
+        <div class="card">
+            <div id="auth-box" class="mb-4">
+                <input type="email" id="email" class="bg-gray-800 text-white rounded p-2 w-full mb-2" placeholder="Email">
+                <input type="password" id="password" class="bg-gray-800 text-white rounded p-2 w-full mb-2" placeholder="Password">
+                <button id="signup" class="cta-button w-full mb-2">Sign Up</button>
+                <button id="login" class="cta-button w-full mb-2">Log In</button>
+                <button id="logout" class="cta-button w-full" style="display:none;">Log Out</button>
+            </div>
+            <button id="buyCredits" class="cta-button w-full mb-2">Buy 5 Song Credits</button>
+            <form id="song-form" aria-labelledby="form-title">
+                <h2 id="form-title" class="sr-only">Song Generation Form</h2>
+                <div class="mt-4">
+                    <div class="flex items-center space-x-3">
+                        <label for="advancedMode" class="text-sm font-medium text-white">⚙️ Pro Mode</label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="advancedMode" aria-label="Toggle Pro Mode">
+                            <span class="slider"></span>
+                        </label>
+                        <span class="toggle-label" id="toggle-label">Off</span>
+                    </div>
+                    <p class="text-xs text-gray-400 mt-1 ml-1">Toggle to provide your own lyrics or create an instrumental track</p>
+                </div>
+                <div class="form-group hidden" id="instrumental-label">
+                    <label for="instrumental" title="Create instrumental track"><i class="fas fa-drum" aria-hidden="true"></i> Instrumental Only (No Vocals)</label>
+                    <input type="checkbox" id="instrumental" name="instrumental" class="w-auto" aria-label="Instrumental Only">
+                </div>
+                <div class="form-group hidden" id="title-label">
+                    <label for="title" title="Name your track"><i class="fas fa-tag" aria-hidden="true"></i> Title</label>
+                    <input type="text" id="title" name="title" class="bg-gray-800 text-white rounded p-2" placeholder="e.g., Midnight Groove" aria-label="Track Title" maxlength="80" aria-describedby="error-title">
+                    <span class="field-error" id="error-title" role="alert"></span>
+                </div>
+                <div class="form-group hidden" id="lyrics-group">
+                    <label id="lyricsLabel" for="lyrics" title="Required only in Pro Mode with vocals"><i class="fas fa-microphone" aria-hidden="true"></i> Lyrics</label>
+                    <textarea id="lyrics" name="lyrics" class="lyrics-input" placeholder="> Enter your song lyrics..." aria-label="Song Lyrics" maxlength="3000" aria-describedby="error-lyrics"></textarea>
+                    <span class="field-error" id="error-lyrics" role="alert"></span>
+                    <p id="lyrics-char-count" class="char-count" aria-live="polite">0/3000 characters</p>
+                </div>
+                <div class="form-group" id="prompt-group">
+                    <label id="promptLabel" for="prompt" title="Required in all modes — keep it under 295 characters"><i class="fas fa-pen" aria-hidden="true"></i> Song Idea</label>
+                    <textarea id="prompt" name="prompt" class="prompt-input" placeholder="> Describe your song (style, mood, scenario)..." aria-label="Song Idea" maxlength="295" aria-describedby="error-prompt"></textarea>
+                    <span class="field-error" id="error-prompt" role="alert"></span>
+                    <p id="prompt-char-count" class="char-count" aria-live="polite">0/295 characters</p>
+                </div>
+                <div class="form-group hidden" id="instruments-label">
+                    <label for="instruments" title="Select instrument"><i class="fas fa-guitar" aria-hidden="true"></i> Instrument (Select one for instrumental mode)</label>
+                    <select id="instruments" name="instruments" class="bg-gray-800 text-white rounded p-2" aria-label="Select Instrument">
+                        <option value="">Select an instrument</option>
+                        <optgroup label="Strings">
+                            <option value="Violin">Violin</option>
+                            <option value="Strings">Strings</option>
+                            <option value="Electric Guitar">Electric Guitar</option>
+                            <option value="Acoustic Guitar">Acoustic Guitar</option>
+                        </optgroup>
+                        <optgroup label="Keyboards & Synths">
+                            <option value="Piano">Piano</option>
+                            <option value="Synth">Synth</option>
+                            <option value="Pads">Pads</option>
+                            <option value="Organ">Organ</option>
+                        </optgroup>
+                        <optgroup label="Percussion">
+                            <option value="Trap Drums">Trap Drums</option>
+                            <option value="808 Bass">808 Bass</option>
+                            <option value="Percussion">Percussion</option>
+                            <option value="Kick + Snare Combo">Kick + Snare Combo</option>
+                            <option value="Kick Booster">Kick Booster</option>
+                            <option value="Drum Machine FX">Drum Machine FX</option>
+                        </optgroup>
+                        <optgroup label="Woodwinds">
+                            <option value="Flute">Flute</option>
+                            <option value="Saxophone">Saxophone</option>
+                        </optgroup>
+                        <optgroup label="Brass">
+                            <option value="Brass (Trumpet)">Brass (Trumpet)</option>
+                        </optgroup>
+                        <optgroup label="Vocals">
+                            <option value="Choir">Choir</option>
+                        </optgroup>
+                        <optgroup label="Other">
+                            <option value="Bells/Chimes">Bells/Chimes</option>
+                        </optgroup>
+                    </select>
+                </div>
+                <div class="form-group hidden" id="duration-label">
+                    <label for="duration" title="Set track duration"><i class="fas fa-clock" aria-hidden="true"></i> Duration (Minutes)</label>
+                    <select id="duration" name="duration" class="bg-gray-800 text-white rounded p-2" aria-label="Select Duration">
+                        <option value="">Select duration</option>
+                        <option value="3" selected>3 minutes</option>
+                        <option value="4">4 minutes</option>
+                        <option value="5">5 minutes</option>
+                        <option value="6">6 minutes</option>
+                        <option value="7">7 minutes</option>
+                    </select>
+                </div>
+                <div class="form-group" id="mood-label">
+                    <label for="mood" title="Add mood tags"><i class="fas fa-smile" aria-hidden="true"></i> Mood Tags (Optional)</label>
+                    <input type="text" id="mood" name="mood" class="bg-gray-800 text-white rounded p-2" placeholder="e.g., chill, upbeat, dark" aria-label="Mood Tags" aria-describedby="error-mood">
+                    <span class="field-error" id="error-mood" role="alert"></span>
+                </div>
+                <div class="form-group hidden" id="negative-tags-label">
+                    <label for="negativeTags" title="Exclude elements"><i class="fas fa-ban" aria-hidden="true"></i> Negative Tags (Optional)</label>
+                    <select id="negativeTags" name="negativeTags" multiple class="bg-gray-800 text-white rounded p-2" aria-label="Select Negative Tags">
+                        <option value="Auto-Tune">Remove Auto-Tune</option>
+                        <option value="Heavy Drums">No Heavy Drums</option>
+                        <option value="Distorted Vocals">No Distorted Vocals</option>
+                    </select>
+                    <div id="negative-tags-chips" class="mt-2"></div>
+                </div>
+                <div class="form-group" id="style-label">
+                    <label id="styleLabel" for="styleSelect" title="Choose your music genre"><i class="fas fa-music" aria-hidden="true"></i> Genre</label>
+                    <select id="styleSelect" name="style" class="bg-gray-800 text-white rounded p-2" aria-label="Select Genre">
+                        <option value="">Select a genre</option>
+                        <option value="Trap">Trap</option>
+                        <option value="Boom Bap">Boom Bap</option>
+                        <option value="Drill">Drill</option>
+                        <option value="Memphis Rap">Memphis Rap</option>
+                        <option value="Gangsta Rap">Gangsta Rap</option>
+                        <option value="Lofi Hip-Hop">Lofi Hip-Hop</option>
+                        <option value="Conscious Rap">Conscious Rap</option>
+                        <option value="Crunk">Crunk</option>
+                        <option value="Dirty South">Dirty South</option>
+                        <option value="Classic R&B">Classic R&B</option>
+                        <option value="Neo Soul">Neo Soul</option>
+                        <option value="Alternative R&B">Alternative R&B</option>
+                        <option value="Bedroom R&B">Bedroom R&B</option>
+                        <option value="Classic Rock">Classic Rock</option>
+                        <option value="Hard Rock">Hard Rock</option>
+                        <option value="Grunge">Grunge</option>
+                        <option value="Indie Rock">Indie Rock</option>
+                        <option value="Dance Pop">Dance Pop</option>
+                        <option value="Hyperpop">Hyperpop</option>
+                        <option value="K-Pop">K-Pop</option>
+                        <option value="Latin Trap">Latin Trap</option>
+                        <option value="Afrobeats">Afrobeats</option>
+                        <option value="Reggaeton">Reggaeton</option>
+                        <option value="Soca">Soca</option>
+                        <option value="Chiptune">Chiptune</option>
+                        <option value="Vaporwave">Vaporwave</option>
+                        <option value="Nightcore">Nightcore</option>
+                        <option value="Country">Country</option>
+                        <option value="Bluegrass">Bluegrass</option>
+                        <option value="Folk">Folk</option>
+                        <option value="Jazz">Jazz</option>
+                        <option value="Blues">Blues</option>
+                        <option value="EDM">EDM</option>
+                        <option value="Techno">Techno</option>
+                        <option value="Dubstep">Dubstep</option>
+                        <option value="Drum & Bass">Drum & Bass</option>
+                        <option value="Video Game Music">Video Game Music</option>
+                        <option value="TikTok Trend">TikTok Trend</option>
+                        <option value="Anime Soundtrack">Anime Soundtrack</option>
+                    </select>
+                    <span class="field-error" id="error-style" role="alert"></span>
+                </div>
+                <div class="form-group" id="language-label">
+                    <label id="languageLabel" for="languageSelect" title="Select language"><i class="fas fa-globe" aria-hidden="true"></i> Language</label>
+                    <select id="languageSelect" name="language" class="bg-gray-800 text-white rounded p-2" aria-label="Select Language">
+                        <option value="">Select a language</option>
+                        <option value="English (US)">English (US)</option>
+                        <option value="English (GB)">English (GB)</option>
+                        <option value="English (AU)">English (AU)</option>
+                        <option value="Spanish (ES)">Spanish (ES)</option>
+                        <option value="Spanish (MX)">Spanish (MX)</option>
+                        <option value="Spanish (CO)">Spanish (CO)</option>
+                        <option value="Spanish (CL)">Spanish (CL)</option>
+                        <option value="Spanish (PE)">Spanish (PE)</option>
+                        <option value="French (FR)">French (FR)</option>
+                        <option value="French (CA)">French (CA)</option>
+                        <option value="French (BE)">French (BE)</option>
+                        <option value="Portuguese (BR)">Portuguese (BR)</option>
+                        <option value="Portuguese (PT)">Portuguese (PT)</option>
+                        <option value="Arabic (Standard)">Arabic (Standard)</option>
+                        <option value="Arabic (Egyptian)">Arabic (Egyptian)</option>
+                        <option value="Arabic (Gulf)">Arabic (Gulf)</option>
+                        <option value="Arabic (Levantine)">Arabic (Levantine)</option>
+                        <option value="Arabic (Moroccan)">Arabic (Moroccan)</option>
+                        <option value="Mandarin Chinese (Simplified)">Mandarin Chinese (Simplified)</option>
+                        <option value="Mandarin Chinese (Traditional)">Mandarin Chinese (Traditional)</option>
+                        <option value="Cantonese Chinese">Cantonese Chinese</option>
+                        <option value="Japanese">Japanese</option>
+                        <option value="Korean">Korean</option>
+                        <option value="Hindi">Hindi</option>
+                        <option value="Bengali">Bengali</option>
+                        <option value="Tagalog">Tagalog</option>
+                        <option value="Cebuano">Cebuano</option>
+                        <option value="Ilocano">Ilocano</option>
+                        <option value="Vietnamese">Vietnamese</option>
+                        <option value="Thai">Thai</option>
+                        <option value="Indonesian">Indonesian</option>
+                        <option value="German">German</option>
+                        <option value="Italian">Italian</option>
+                        <option value="Dutch">Dutch</option>
+                        <option value="Polish">Polish</option>
+                        <option value="Russian">Russian</option>
+                        <option value="Turkish">Turkish</option>
+                        <option value="Ukrainian">Ukrainian</option>
+                        <option value="Hebrew">Hebrew</option>
+                        <option value="Swahili">Swahili</option>
+                        <option value="Zulu">Zulu</option>
+                        <option value="Yoruba">Yoruba</option>
+                        <option value="Igbo">Igbo</option>
+                        <option value="Hausa">Hausa</option>
+                        <option value="Tamil">Tamil</option>
+                        <option value="Telugu">Telugu</option>
+                        <option value="Malayalam">Malayalam</option>
+                        <option value="Punjabi">Punjabi</option>
+                        <option value="Urdu">Urdu</option>
+                        <option value="Farsi (Persian)">Farsi (Persian)</option>
+                        <option value="Malay">Malay</option>
+                        <option value="Sinhala">Sinhala</option>
+                        <option value="Khmer">Khmer</option>
+                        <option value="Nepali">Nepali</option>
+                        <option value="Samoan">Samoan</option>
+                        <option value="Maori">Maori</option>
+                        <option value="Burmese (Myanmar)">Burmese (Myanmar)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="model" title="Choose AI model"><i class="fas fa-robot" aria-hidden="true"></i> Model</label>
+                    <select id="model" name="model" class="bg-gray-800 text-white rounded p-2" aria-label="Select AI Model">
+                        <option value="V4_5">V4_5</option>
+                    </select>
+                </div>
+                <button type="submit" class="generate-button" id="generate-button" aria-label="Generate Song">Generate Song</button>
+                <div id="generation-progress" class="progress-container" style="display:none">
+                    <div id="generation-progress-bar" class="progress-bar glow-progress" style="width:0%"></div>
+                    <div class="absolute inset-0 flex items-center justify-center text-xs font-bold text-white tracking-wide" id="progress-label" aria-live="polite">Cooking your beat… 0%</div>
+                </div>
+                <div id="mini-visualizer" class="mini-visualizer" style="display:none">
+                    <div class="h-4 w-1 bg-green-400 animate-bounce"></div>
+                    <div class="h-6 w-1 bg-green-400 animate-bounce" style="animation-delay:100ms"></div>
+                    <div class="h-4 w-1 bg-green-400 animate-bounce" style="animation-delay:200ms"></div>
+                </div>
+                <div id="waiting-message" class="friendly-message" style="display:none">
+                    <span class="spinner" style="display:inline-block"></span> Waiting for audio...
+                </div>
+                <div id="stalled-message" class="stalled-message" style="display:none">
+                    <span class="spinner" style="display:inline-block"></span> <span id="stalled-text">Generation stalled, please retry.</span>
+                    <button class="retry-button" id="retry-button" aria-label="Retry Song Generation">Retry</button>
+                </div>
+                <div id="error-message" class="error" style="display:none"></div>
+                <div id="lyrics-warning" class="warning-message" style="display:none">Note: Long lyrics may be partially recited due to API limitations. Full lyrics will be available for download.</div>
+            </form>
+            <div id="results" class="mt-4"></div>
+            <div id="mySongs" class="mt-4"></div>
+            <form id="feedback-form" class="mt-4">
+                <h3 class="text-lg font-semibold text-white mb-2">Feedback</h3>
+                <textarea class="bg-gray-800 text-white rounded p-2 w-full" placeholder="Tell us about your experience..." aria-label="Feedback"></textarea>
+                <button type="submit" class="cta-button mt-2">Submit Feedback</button>
+            </form>
+        </div>
+    </div>
+    <footer class="text-center text-gray-400 py-4"><p>© 2025 Bigman Hitmaker+. All rights reserved.</p></footer>
+    <script type="module">
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.42.5/+esm'
+      
+        const supabaseUrl = 'https://aafkyubzfmrlgiqhcnvp.supabase.co'
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFhZmt5dWJ6Zm1ybGdpcWhjbnZwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTExMTkxMDgsImV4cCI6MjA2NjY5NTEwOH0.mUSV2_oa9uOCi1M_cGRe_3ZXx_eA6CI6LC0c8QfoL5Y'
+        const supabase = createClient(supabaseUrl, supabaseKey)
+      
+        window.supabase = supabase
+
+        document.getElementById('signup').onclick = async () => {
+            const email = document.getElementById('email').value
+            const password = document.getElementById('password').value
+            const { error } = await supabase.auth.signUp({
+                email: email,
+                password: password,
+            })
+            if (error) {
+                alert(error.message)
+            } else {
+                alert('Signup successful! Check your email to confirm.')
+                document.getElementById('signup').style.display = 'none'
+                document.getElementById('login').style.display = 'none'
+                document.getElementById('logout').style.display = 'block'
+            }
+        }
+
+        document.getElementById('login').onclick = async () => {
+            const email = document.getElementById('email').value
+            const password = document.getElementById('password').value
+            const { error } = await supabase.auth.signInWithPassword({
+                email: email,
+                password: password,
+            })
+            if (error) {
+                alert(error.message)
+            } else {
+                alert('Logged in!')
+                document.getElementById('signup').style.display = 'none'
+                document.getElementById('login').style.display = 'none'
+                document.getElementById('logout').style.display = 'block'
+                loadMySongs()
+            }
+        }
+
+        document.getElementById('logout').onclick = async () => {
+            await supabase.auth.signOut()
+            alert('Logged out')
+            document.getElementById('signup').style.display = 'block'
+            document.getElementById('login').style.display = 'block'
+            document.getElementById('logout').style.display = 'none'
+            document.getElementById('mySongs').innerHTML = ''
+        }
+
+        document.getElementById('buyCredits').onclick = async () => {
+            const session = await supabase.auth.getSession()
+            if (!session.data.session) {
+                alert('Please log in to buy credits.')
+                return
+            }
+            const token = session.data.session.access_token
+            const res = await fetch('/create-checkout-session', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            })
+            const sessionData = await res.json()
+            if (sessionData.url) {
+                window.location.href = sessionData.url
+            } else {
+                alert('Error creating checkout session: ' + (sessionData.error || 'Unknown error'))
+            }
+        }
+
+        async function loadMySongs() {
+            const session = await supabase.auth.getSession()
+            if (!session.data.session) {
+                document.getElementById('mySongs').innerHTML = '<p>Please log in to view your songs.</p>'
+                return
+            }
+            const token = session.data.session.access_token
+            try {
+                const res = await fetch('/my-songs', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                })
+                if (!res.ok) {
+                    throw new Error(`HTTP error: ${res.status}`)
+                }
+                const songs = await res.json()
+                const container = document.getElementById('mySongs')
+                container.innerHTML = '<h3 class="text-lg font-semibold text-white mb-2">My Songs</h3>'
+                if (songs.length === 0) {
+                    container.innerHTML += '<p>No songs yet. Generate one above!</p>'
+                    return
+                }
+                for (const song of songs) {
+                    container.innerHTML += `
+                        <div class="track-card">
+                            <h3 class="font-bold text-white text-xl">${song.title || 'Untitled'}</h3>
+                            <audio src="${song.preview_url}" controls class="w-full rounded my-2"></audio>
+                            ${song.unlocked 
+                                ? `<a href="${song.full_url}" download class="download-button flex items-center gap-2 bg-gradient-to-r from-blue-500 to-green-400 px-4 py-2 rounded-lg text-white font-semibold shadow hover:from-green-400 hover:to-blue-500 transition"><i class="fas fa-download"></i>Download Full Song</a>`
+                                : `<button onclick="unlockSong('${song.id}')" class="cta-button">Unlock for 1 Credit</button>`
+                            }
+                            <hr class="my-3 border-t-2 border-green-400 rounded">
+                        </div>
+                    `
+                }
+            } catch (error) {
+                console.error('Error loading songs:', error)
+                document.getElementById('mySongs').innerHTML = '<p>Error loading songs. Please try again.</p>'
+            }
+        }
+
+        window.unlockSong = async function(songId) {
+            const session = await supabase.auth.getSession()
+            if (!session.data.session) {
+                alert('Please log in to unlock songs.')
+                return
+            }
+            const token = session.data.session.access_token
+            try {
+                const res = await fetch(`/unlock-song/${songId}`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                })
+                const result = await res.json()
+                if (res.ok) {
+                    alert(result.message)
+                    loadMySongs()
+                } else {
+                    alert('Error: ' + (result.message || 'Failed to unlock song'))
+                }
+            } catch (error) {
+                alert('Error unlocking song: ' + error.message)
+            }
+        }
+
+        loadMySongs()
+    </script>
+    <script>
+        function checkDOMElements(elements, functionName, taskId = null) {
+            const missing = Object.entries(elements).filter(([_, e]) => !e).map(([id]) => id)
+            if (missing.length > 0) {
+                console.error(`Missing DOM elements in ${functionName}: ${missing.join(', ')}`)
+                sendAnalytics('ui_error', { error: `Missing DOM elements in ${functionName}: ${missing.join(', ')}`, taskId })
+                alert('Error: Some UI elements are missing. Please refresh the page.')
+                return false
+            }
+            return true
+        }
+
+        function scrollToPrompt() {
+            const form = document.getElementById('song-form')
+            if (form) {
+                form.scrollIntoView({ behavior: 'smooth' })
+            } else {
+                console.error('Form element not found for scrollToPrompt')
+                sendAnalytics('ui_error', { error: 'Form element not found for scrollToPrompt' })
+            }
+        }
+
+        const domElements = {
+            proModeToggle: document.getElementById('advancedMode'),
+            instrumentalToggle: document.getElementById('instrumental'),
+            lyricsInput: document.getElementById('lyrics'),
+            lyricsLabel: document.getElementById('lyricsLabel'),
+            lyricsGroup: document.getElementById('lyrics-group'),
+            promptInput: document.getElementById('prompt'),
+            promptLabel: document.getElementById('promptLabel'),
+            promptGroup: document.getElementById('prompt-group'),
+            durationSelect: document.getElementById('duration'),
+            instrumentsField: document.getElementById('instruments-label'),
+            durationField: document.getElementById('duration-label'),
+            errorLyrics: document.getElementById('error-lyrics'),
+            errorPrompt: document.getElementById('error-prompt'),
+            generateButton: document.getElementById('generate-button'),
+            lyricsWarning: document.getElementById('lyrics-warning'),
+            progressContainer: document.getElementById('generation-progress'),
+            progressBar: document.getElementById('generation-progress-bar'),
+            progressLabel: document.getElementById('progress-label'),
+            miniVisualizer: document.getElementById('mini-visualizer'),
+            waitingMessage: document.getElementById('waiting-message'),
+            stalledMessage: document.getElementById('stalled-message'),
+            stalledText: document.getElementById('stalled-text'),
+            errorMessage: document.getElementById('error-message'),
+            results: document.getElementById('results'),
+            instrumentsSelect: document.getElementById('instruments'),
+            form: document.getElementById('song-form')
+        }
+
+        let taskLyricsMap = new Map()
+        let isGenerating = false
+        let currentTaskId = null
+        let eventSource = null
+        const proModeFields = ['instrumental-label', 'title-label', 'negative-tags-label']
+
+        function updateFieldVisibility() {
+            if (!checkDOMElements({
+                proModeToggle: domElements.proModeToggle,
+                instrumentalToggle: domElements.instrumentalToggle,
+                lyricsGroup: domElements.lyricsGroup,
+                promptGroup: domElements.promptGroup,
+                promptLabel: domElements.promptLabel,
+                lyricsLabel: domElements.lyricsLabel,
+                durationSelect: domElements.durationSelect,
+                instrumentsField: domElements.instrumentsField,
+                durationField: domElements.durationField,
+                errorLyrics: domElements.errorLyrics,
+                errorPrompt: domElements.errorPrompt,
+                generateButton: domElements.generateButton,
+                lyricsWarning: domElements.lyricsWarning
+            }, 'updateFieldVisibility')) { return }
+            const isProModeOn = domElements.proModeToggle.checked
+            const isInstrumentalOn = domElements.instrumentalToggle.checked
+            const toggleLabel = document.getElementById('toggle-label')
+            if (toggleLabel) {
+                toggleLabel.textContent = isProModeOn ? 'On' : 'Off'
+            } else {
+                console.warn('Toggle label not found')
+                sendAnalytics('ui_warning', { error: 'Toggle label not found' })
+            }
+            proModeFields.forEach(id => {
+                const element = document.getElementById(id)
+                if (element) {
+                    element.classList.toggle('hidden', !isProModeOn)
+                } else {
+                    console.warn(`Element with ID ${id} not found`)
+                    sendAnalytics('ui_warning', { error: `Element with ID ${id} not found` })
+                }
+            })
+            domElements.instrumentsField.classList.toggle('hidden', !(isProModeOn && isInstrumentalOn))
+            domElements.durationField.classList.toggle('hidden', !(isProModeOn && isInstrumentalOn))
+            if (isProModeOn && !isInstrumentalOn) {
+                domElements.lyricsGroup.classList.remove('hidden')
+                domElements.lyricsLabel.textContent = 'Lyrics'
+                domElements.lyricsLabel.innerHTML = '<i class="fas fa-microphone" aria-hidden="true"></i> Lyrics'
+                if (domElements.lyricsInput) {
+                    domElements.lyricsInput.setAttribute('required', 'required')
+                    domElements.lyricsInput.placeholder = '> Enter your song lyrics...'
+                }
+                domElements.lyricsWarning.style.display = 'block'
+            } else {
+                domElements.lyricsGroup.classList.add('hidden')
+                if (domElements.lyricsInput) {
+                    domElements.lyricsInput.removeAttribute('required')
+                }
+                domElements.lyricsWarning.style.display = 'none'
+            }
+            domElements.promptGroup.classList.remove('hidden')
+            domElements.promptLabel.textContent = 'Song Idea'
+            domElements.promptLabel.innerHTML = '<i class="fas fa-pen" aria-hidden="true"></i> Song Idea'
+            if (domElements.promptInput) {
+                domElements.promptInput.placeholder = '> Describe your song (style, mood, scenario)...'
+                domElements.promptInput.setAttribute('required', 'required')
+            }
+            domElements.durationSelect.value = isProModeOn && !isInstrumentalOn ? '4' : '3'
+            if (domElements.instrumentsSelect) {
+                const parent = domElements.instrumentsSelect.parentElement
+                const isSingleSelect = isProModeOn && isInstrumentalOn
+                const newSelect = document.createElement('select')
+                newSelect.id = 'instruments'
+                newSelect.name = 'instruments'
+                newSelect.className = 'bg-gray-800 text-white rounded p-2'
+                newSelect.setAttribute('aria-label', isSingleSelect ? 'Select Instrument' : 'Select Instruments')
+                if (!isSingleSelect) {
+                    newSelect.setAttribute('multiple', 'multiple')
+                }
+                const options = [
+                    { group: 'Strings', values: ['Violin', 'Strings', 'Electric Guitar', 'Acoustic Guitar'] },
+                    { group: 'Keyboards & Synths', values: ['Piano', 'Synth', 'Pads', 'Organ'] },
+                    { group: 'Percussion', values: ['Trap Drums', '808 Bass', 'Percussion', 'Kick + Snare Combo', 'Kick Booster', 'Drum Machine FX'] },
+                    { group: 'Woodwinds', values: ['Flute', 'Saxophone'] },
+                    { group: 'Brass', values: ['Brass (Trumpet)'] },
+                    { group: 'Vocals', values: ['Choir'] },
+                    { group: 'Other', values: ['Bells/Chimes'] }
+                ]
+                const placeholder = document.createElement('option')
+                placeholder.value = ''
+                placeholder.text = isSingleSelect ? 'Select an instrument' : 'Select instruments (1–3)'
+                newSelect.appendChild(placeholder)
+                options.forEach(group => {
+                    const optgroup = document.createElement('optgroup')
+                    optgroup.label = group.group
+                    group.values.forEach(value => {
+                        const option = document.createElement('option')
+                        option.value = value
+                        option.text = value
+                        optgroup.appendChild(option)
+                    })
+                    newSelect.appendChild(optgroup)
+                })
+                if (parent) {
+                    parent.replaceChild(newSelect, domElements.instrumentsSelect)
+                    domElements.instrumentsSelect = newSelect
+                } else {
+                    console.warn('Instruments select parent not found')
+                    sendAnalytics('ui_warning', { error: 'Instruments select parent not found' })
+                }
+            } else {
+                console.warn('Instruments select not found')
+                sendAnalytics('ui_warning', { error: 'Instruments select not found' })
+            }
+            validateForm()
+        }
+
+        function validateForm() {
+            if (!checkDOMElements({
+                promptInput: domElements.promptInput,
+                errorPrompt: domElements.errorPrompt,
+                generateButton: domElements.generateButton,
+                errorLyrics: domElements.errorLyrics,
+                lyricsWarning: domElements.lyricsWarning
+            }, 'validateForm')) { return }
+            const isProModeOn = domElements.proModeToggle.checked
+            const isInstrumentalOn = domElements.instrumentalToggle.checked
+            const promptValue = domElements.promptInput.value.trim()
+            const lyricsValue = domElements.lyricsInput ? domElements.lyricsInput.value.trim() : ''
+            let isValid = true
+            if (!promptValue || promptValue.length < 5) {
+                domElements.errorPrompt.textContent = 'Prompt is required (max 295 characters)'
+                domElements.errorPrompt.style.display = 'block'
+                isValid = false
+            } else if (promptValue.length > 295) {
+                domElements.errorPrompt.textContent = 'Prompt exceeds 295 characters, trimming to fit'
+                domElements.errorPrompt.style.display = 'block'
+                domElements.promptInput.value = promptValue.substring(0, 295)
+                const promptCharCount = document.getElementById('prompt-char-count')
+                if (promptCharCount) {
+                    promptCharCount.textContent = '295/295 characters'
+                }
+            } else {
+                domElements.errorPrompt.style.display = 'none'
+                domElements.errorPrompt.textContent = ''
+            }
+            if (isProModeOn && !isInstrumentalOn) {
+                if (!lyricsValue || lyricsValue.length < 5) {
+                    domElements.errorLyrics.textContent = 'Lyrics required for vocal tracks (max 3000 characters)'
+                    domElements.errorLyrics.style.display = 'block'
+                    isValid = false
+                } else if (lyricsValue.length > 1000) {
+                    domElements.errorLyrics.textContent = 'Lyrics may be truncated by the API if longer than 1000 characters'
+                    domElements.errorLyrics.style.display = 'block'
+                } else if (lyricsValue.length > 3000) {
+                    domElements.errorLyrics.textContent = 'Lyrics exceed 3000 characters, trimming to fit'
+                    domElements.errorLyrics.style.display = 'block'
+                    domElements.lyricsInput.value = lyricsValue.substring(0, 3000)
+                    const lyricsCharCount = document.getElementById('lyrics-char-count')
+                    if (lyricsCharCount) {
+                        lyricsCharCount.textContent = '3000/3000 characters'
+                    }
+                } else {
+                    domElements.errorLyrics.style.display = 'none'
+                    domElements.errorLyrics.textContent = ''
+                }
+            } else {
+                domElements.errorLyrics.style.display = 'none'
+                domElements.errorLyrics.textContent = ''
+            }
+            domElements.generateButton.disabled = !isValid || isGenerating
+        }
+
+        async function sendAnalytics(event, data) {
+            try {
+                const response = await fetch('/analytics', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ event, data })
+                })
+                if (!response.ok) {
+                    throw new Error(`Analytics request failed: ${response.status}`)
+                }
+                console.log(`Analytics sent: ${event}`, data)
+            } catch (e) {
+                console.error('Analytics error:', e)
+            }
+        }
+
+        async function trySSE(taskId, formData) {
+            let retries = 0
+            const maxRetries = 5
+            const retryDelay = 2000
+            while (retries < maxRetries) {
+                try {
+                    console.log(`Attempting SSE connection for task ${taskId} (retry ${retries + 1}/${maxRetries})`)
+                    eventSource = new EventSource(`/events/${taskId}`, { withCredentials: true })
+                    eventSource.onopen = () => {
+                        console.log(`SSE connected for task ${taskId}`)
+                        sendAnalytics('sse_connected', { taskId })
+                    }
+                    eventSource.onmessage = (event) => {
+                        console.log('SSE message received:', event.data)
+                        try {
+                            const data = JSON.parse(event.data)
+                            updateProgress(data, taskId, formData)
+                            if (data.status === 'done' && data.tracks && data.tracks.length > 0 && data.tracks.every(t => t.has_audio && t.audio_url)) {
+                                console.log('SSE completed, closing connection')
+                                eventSource.close()
+                                eventSource = null
+                                loadMySongs() // Refresh dashboard after successful generation
+                            } else if (data.status === 'failed' && data.tracks && data.tracks.length > 0) {
+                                console.log('Task failed with tracks, closing SSE')
+                                eventSource.close()
+                                eventSource = null
+                            }
+                        } catch (e) {
+                            console.error('Error parsing SSE data:', e, event.data)
+                            if (domElements.errorMessage) {
+                                domElements.errorMessage.textContent = 'Error processing server update'
+                                domElements.errorMessage.style.display = 'block'
+                            }
+                            sendAnalytics('sse_error', { error: e.message, taskId })
+                        }
+                    }
+                    eventSource.onerror = async () => {
+                        console.log(`SSE error (retry ${retries + 1}/${maxRetries}) — falling back to polling`)
+                        eventSource.close()
+                        eventSource = null
+                        retries++
+                        if (retries < maxRetries) {
+                            console.log(`Retrying SSE after ${retryDelay}ms`)
+                            await new Promise(resolve => setTimeout(resolve, retryDelay * (retries + 1)))
+                        } else {
+                            console.log('Max SSE retries reached, starting polling')
+                            pollStatus(taskId, formData)
+                        }
+                    }
+                    return
+                } catch (e) {
+                    console.error('SSE connection error:', e)
+                    retries++
+                    if (retries < maxRetries) {
+                        console.log(`Retrying SSE after ${retryDelay}ms`)
+                        await new Promise(resolve => setTimeout(resolve, retryDelay * (retries + 1)))
+                    } else {
+                        console.log('Max SSE retries reached, starting polling')
+                        pollStatus(taskId, formData)
+                    }
+                }
+            }
+        }
+
+        async function pollStatus(taskId, formData) {
+            if (!checkDOMElements({
+                progressContainer: domElements.progressContainer,
+                progressBar: domElements.progressBar,
+                progressLabel: domElements.progressLabel,
+                miniVisualizer: domElements.miniVisualizer,
+                waitingMessage: domElements.waitingMessage,
+                stalledMessage: domElements.stalledMessage,
+                stalledText: domElements.stalledText,
+                errorMessage: domElements.errorMessage,
+                generateButton: domElements.generateButton
+            }, 'pollStatus', taskId)) { return }
+            let stalledCount = 0
+            const maxStalled = 5
+            const maxDuration = 120000
+            const pollInterval = 2000
+            let lastProgress = 0
+            const startTime = Date.now()
+            while (Date.now() - startTime < maxDuration) {
+                try {
+                    console.log(`Polling status for task ${taskId}`)
+                    const response = await fetch(`/status/${taskId}`)
+                    if (!response.ok) {
+                        throw new Error(`HTTP error: ${response.status}`)
+                    }
+                    const data = await response.json()
+                    console.log('Poll status response:', JSON.stringify(data, null, 2))
+                    updateProgress(data, taskId, formData)
+                    if (data.status === 'done' && data.tracks && data.tracks.length > 0 && data.tracks.every(t => t.has_audio && t.audio_url)) {
+                        console.log('All tracks have audio, stopping polling')
+                        sendAnalytics('polling_completed', { taskId })
+                        loadMySongs() // Refresh dashboard after successful generation
+                        break
+                    }
+                    if (data.status === 'failed' && data.tracks && data.tracks.length > 0) {
+                        console.log('Task failed with tracks, stopping polling')
+                        sendAnalytics('task_failed', { taskId })
+                        break
+                    }
+                    if (data.progress && data.progress === lastProgress && data.progress < 100) {
+                        stalledCount++
+                        if (stalledCount >= maxStalled) {
+                            console.log(`Progress stalled at ${data.progress}% for ${maxStalled * pollInterval}ms, showing retry message`)
+                            domElements.stalledMessage.style.display = 'flex'
+                            domElements.stalledText.textContent = 'Generation stalled, please retry.'
+                            const retryButton = document.getElementById('retry-button')
+                            if (retryButton) {
+                                retryButton.onclick = () => {
+                                    console.log('Retry button clicked, retrying task')
+                                    sendAnalytics('retry_button_clicked', { taskId, retry_count: data.retry_count || 0 })
+                                    retryTask(taskId)
+                                }
+                            }
+                            const response = await fetch(`/status/${taskId}?force=true`)
+                            const refreshedData = await response.json()
+                            console.log('Refreshed status:', JSON.stringify(refreshedData, null, 2))
+                            updateProgress(refreshedData, taskId, formData)
+                            stalledCount = 0
+                        }
+                    } else {
+                        stalledCount = 0
+                    }
+                    lastProgress = data.progress || 0
+                    await new Promise(resolve => setTimeout(resolve, pollInterval))
+                } catch (e) {
+                    console.error('Polling error:', e)
+                    domElements.errorMessage.textContent = `Error: ${e.message}`
+                    domElements.errorMessage.style.display = 'block'
+                    domElements.progressContainer.style.display = 'none'
+                    domElements.miniVisualizer.style.display = 'none'
+                    domElements.waitingMessage.style.display = 'none'
+                    isGenerating = false
+                    domElements.generateButton.disabled = false
+                    domElements.generateButton.classList.remove('loading')
+                    sendAnalytics('polling_error', { error: e.message, taskId })
+                    break
+                }
+            }
+            if (Date.now() - startTime >= maxDuration) {
+                console.error('Polling timed out after 120 seconds')
+                domElements.errorMessage.textContent = 'Error: Generation timed out, please retry or check your network'
+                domElements.errorMessage.style.display = 'block'
+                domElements.progressContainer.style.display = 'none'
+                domElements.miniVisualizer.style.display = 'none'
+                domElements.waitingMessage.style.display = 'none'
+                domElements.stalledMessage.style.display = 'flex'
+                domElements.stalledText.textContent = 'Generation timed out, please retry.'
+                const retryButton = document.getElementById('retry-button')
+                if (retryButton) {
+                    retryButton.onclick = () => {
+                        console.log('Retry button clicked, retrying task')
+                        sendAnalytics('retry_button_clicked', { taskId, retry_count: data?.retry_count || 0 })
+                        retryTask(taskId)
+                    }
+                }
+                isGenerating = false
+                domElements.generateButton.disabled = false
+                domElements.generateButton.classList.remove('loading')
+                sendAnalytics('polling_timeout', { taskId, duration: maxDuration })
+            }
+        }
+
+        async function retryTask(taskId) {
+            if (!checkDOMElements({
+                errorMessage: domElements.errorMessage,
+                progressContainer: domElements.progressContainer,
+                miniVisualizer: domElements.miniVisualizer,
+                waitingMessage: domElements.waitingMessage,
+                stalledMessage: domElements.stalledMessage,
+                stalledText: domElements.stalledText,
+                generateButton: domElements.generateButton
+            }, 'retryTask', taskId)) { return }
+            try {
+                console.log(`Retrying task ${taskId}`)
+                domElements.stalledText.textContent = 'Retrying...'
+                const retryButton = document.getElementById('retry-button')
+                if (retryButton) {
+                    retryButton.classList.add('loading')
+                    retryButton.disabled = true
+                }
+                const response = await fetch(`/retry/${taskId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${(await supabase.auth.getSession()).data.session.access_token}`
+                    }
+                })
+                const result = await response.json()
+                console.log('Retry response:', JSON.stringify(result, null, 2))
+                if (result.msg === 'success') {
+                    currentTaskId = result.data.taskId
+                    console.log(`Retrying task ID: ${currentTaskId}`)
+                    domElements.errorMessage.style.display = 'none'
+                    domElements.progressContainer.style.display = 'block'
+                    domElements.miniVisualizer.style.display = 'flex'
+                    domElements.waitingMessage.style.display = 'flex'
+                    domElements.stalledMessage.style.display = 'none'
+                    isGenerating = true
+                    domElements.generateButton.disabled = true
+                    domElements.generateButton.classList.add('loading')
+                    await trySSE(currentTaskId, null)
+                    setTimeout(() => pollStatus(currentTaskId, null), 5000)
+                    sendAnalytics('task_retry', { taskId })
+                } else {
+                    throw new Error(result.message || 'Failed to retry task')
+                }
+            } catch (e) {
+                console.error('Retry error:', e)
+                domElements.errorMessage.textContent = `Error: ${e.message}`
+                domElements.errorMessage.style.display = 'block'
+                domElements.progressContainer.style.display = 'none'
+                domElements.miniVisualizer.style.display = 'none'
+                domElements.waitingMessage.style.display = 'none'
+                domElements.stalledMessage.style.display = 'flex'
+                domElements.stalledText.textContent = 'Retry failed, please try again.'
+                const retryButton = document.getElementById('retry-button')
+                if (retryButton) {
+                    retryButton.classList.remove('loading')
+                    retryButton.disabled = false
+                }
+                isGenerating = false
+                domElements.generateButton.disabled = false
+                domElements.generateButton.classList.remove('loading')
+                sendAnalytics('retry_error', { error: e.message, taskId })
+            }
+        }
+
+        function updateProgress(data, taskId, formData) {
+            if (!checkDOMElements({
+                progressContainer: domElements.progressContainer,
+                progressBar: domElements.progressBar,
+                progressLabel: domElements.progressLabel,
+                miniVisualizer: domElements.miniVisualizer,
+                waitingMessage: domElements.waitingMessage,
+                stalledMessage: domElements.stalledMessage,
+                stalledText: domElements.stalledText,
+                errorMessage: domElements.errorMessage,
+                results: domElements.results,
+                generateButton: domElements.generateButton
+            }, 'updateProgress', taskId)) { return }
+            console.log('Updating progress with data:', JSON.stringify(data, null, 2))
+            if (!data || typeof data.progress === 'undefined' || !data.status) {
+                console.error('Invalid progress data:', data)
+                domElements.errorMessage.textContent = 'Error: Invalid progress data received'
+                domElements.errorMessage.style.display = 'block'
+                sendAnalytics('invalid_progress_data', { taskId, data })
+                return
+            }
+            domElements.progressContainer.style.display = 'block'
+            domElements.miniVisualizer.style.display = 'flex'
+            domElements.waitingMessage.style.display = 'flex'
+            domElements.progressBar.style.width = `${data.progress || 0}%`
+            domElements.progressLabel.textContent = data.progress < 30 ? 'Preparing your track...' : data.progress < 60 ? 'Generating audio...' : data.progress < 100 ? 'Finalizing your beat...' : 'Waiting for tracks...'
+            if (data.status === 'failed' && (!data.tracks || data.tracks.length === 0)) {
+                console.error('Task failed with no tracks:', data)
+                domElements.errorMessage.textContent = 'Task failed to generate audio. Click Retry to try again.'
+                domElements.errorMessage.style.display = 'block'
+                domElements.progressContainer.style.display = 'none'
+                domElements.miniVisualizer.style.display = 'none'
+                domElements.waitingMessage.style.display = 'none'
+                domElements.stalledMessage.style.display = 'flex'
+                domElements.stalledText.textContent = 'Generation stalled, please retry.'
+                const retryButton = document.getElementById('retry-button')
+                if (retryButton) {
+                    retryButton.classList.remove('loading')
+                    retryButton.disabled = false
+                    retryButton.onclick = () => {
+                        console.log('Retry button clicked, retrying task')
+                        sendAnalytics('retry_button_clicked', { taskId, retry_count: data.retry_count || 0 })
+                        retryTask(taskId)
+                    }
+                }
+                isGenerating = false
+                domElements.generateButton.disabled = false
+                domElements.generateButton.classList.remove('loading')
+                sendAnalytics('task_failed_timeout', { taskId })
+                return
+            }
+            if (data.tracks && data.tracks.length > 0) {
+                if (data.tracks.every(t => t.has_audio && t.audio_url)) {
+                    console.log('All tracks have audio, switching to play-ready mode')
+                    domElements.progressBar.style.width = '100%'
+                    domElements.progressLabel.textContent = 'Beat ready! 🎉'
+                    domElements.progressContainer.style.display = 'none'
+                    domElements.miniVisualizer.style.display = 'none'
+                    domElements.waitingMessage.style.display = 'none'
+                    domElements.stalledMessage.style.display = 'none'
+                    isGenerating = false
+                    domElements.generateButton.disabled = false
+                    domElements.generateButton.classList.remove('loading')
+                    domElements.results.innerHTML = ''
+                    data.tracks.forEach(track => {
+                        console.log(`Rendering audio player for track: ${track.id}`)
+                        setupAudioPlayer(track, taskId, track.lyrics || data.original_lyrics)
+                        sendAnalytics('track_updated', { track_id: track.id, title: track.title })
+                    })
+                    sendAnalytics('track_rendered', { track_id: data.tracks[0]?.id, title: data.tracks[0]?.title })
+                } else if (data.status === 'pending') {
+                    data.tracks.forEach(track => {
+                        if (!document.querySelector(`.track-card[data-id="${track.id}"]`)) {
+                            console.log(`Setting up pending track: ${track.id}`)
+                            setupPendingTrack(track, taskId, formData?.lyrics || data.original_lyrics)
+                        }
+                    })
+                }
+            } else {
+                console.warn('No tracks found in status update, continuing to wait:', data)
+                domElements.progressLabel.textContent = 'Waiting for tracks...'
+                sendAnalytics('no_tracks_waiting', { taskId, status: data.status, progress: data.progress })
+            }
+        }
+
+        function setupPendingTrack(track, taskId, lyrics) {
+            if (!checkDOMElements({ results: domElements.results, errorMessage: domElements.errorMessage }, 'setupPendingTrack', taskId)) { return }
+            console.log(`Setting up pending track for ${track.id} with title: ${track.title}, lyrics: ${track.lyrics ? 'present' : 'none'}`)
+            const card = document.createElement('div')
+            card.className = 'track-card pending bg-gray-900 p-5 rounded-2xl shadow-xl mb-6 border border-green-400'
+            card.dataset.id = track.id
+            const effectiveLyrics = track.lyrics || lyrics || ''
+            card.innerHTML = `
+                <div class="flex items-center justify-between mb-2">
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-record-vinyl text-green-400"></i>
+                        <span class="font-bold text-white text-xl">${track.title || 'Untitled'}</span>
+                        <span class="ml-2 px-2 py-0.5 text-xs bg-pink-500 text-white rounded-full">NEW</span>
+                    </div>
+                    <span class="text-xs text-gray-400">3:49</span>
+                </div>
+                <div class="text-xs text-gray-400 mb-2">Generating audio...</div>
+                <div class="w-full h-2 rounded bg-gray-800 mb-3">
+                    <div class="h-2 rounded bg-gradient-to-r from-green-400 to-blue-500 w-1/2"></div>
+                </div>
+                ${effectiveLyrics && !domElements.instrumentalToggle.checked ? `
+                <details class="bg-gray-800 rounded p-3 mb-2">
+                    <summary class="cursor-pointer text-blue-400 font-semibold">Show Lyrics</summary>
+                    <pre class="text-green-300 mt-2 whitespace-pre-wrap">${effectiveLyrics.replace(/</g, '<').replace(/>/g, '>')}</pre>
+                </details>
+                ` : ''}
+                <hr class="my-3 border-t-2 border-green-400 rounded">
+            `
+            domElements.results.appendChild(card)
+        }
+
+        function setupAudioPlayer(track, taskId, lyrics) {
+            if (!checkDOMElements({ results: domElements.results, errorMessage: domElements.errorMessage }, 'setupAudioPlayer', taskId)) { return }
+            console.log(`Setting up audio player for ${track.id} with title: ${track.title}, URL: ${track.audio_url}, lyrics: ${track.lyrics ? 'present' : 'none'}`)
+            const card = document.createElement('div')
+            card.className = 'track-card new bg-gray-900 p-5 rounded-2xl shadow-xl mb-6 border border-green-400'
+            card.dataset.id = track.id
+            const effectiveLyrics = track.lyrics || lyrics || ''
+            card.innerHTML = `
+                <div class="flex items-center justify-between mb-2">
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-record-vinyl text-green-400"></i>
+                        <span class="font-bold text-white text-xl">${track.title || 'Untitled'}</span>
+                        <span class="ml-2 px-2 py-0.5 text-xs bg-pink-500 text-white rounded-full">NEW</span>
+                    </div>
+                    <span class="text-xs text-gray-400">3:49</span>
+                </div>
+                ${track.has_audio && track.audio_url ? `
+                <div class="flex items-center gap-3 mb-2">
+                    <i class="fas fa-music text-green-400"></i>
+                    <audio controls class="w-full rounded">
+                        <source src="${track.audio_url}" type="audio/mpeg">
+                        Your browser does not support the audio element.
+                    </audio>
+                    <i class="fas fa-headphones text-blue-400"></i>
+                </div>
+                <img src="${track.image_url || ''}" alt="Track cover" class="mt-2 rounded w-full max-w-xs mx-auto" onerror="this.style.display='none'">
+                <div class="flex flex-wrap gap-3 mb-2">
+                    <button class="download-button flex items-center gap-2 bg-gradient-to-r from-blue-500 to-green-400 px-4 py-2 rounded-lg text-white font-semibold shadow hover:from-green-400 hover:to-blue-500 transition" onclick="downloadFile('${track.audio_url}', '${track.title || 'track'}.mp3')">
+                        <i class="fas fa-download"></i>
+                        Download Audio
+                        <span class="ml-1 px-2 py-0.5 text-xs bg-green-500 text-white rounded-full">MP3</span>
+                    </button>
+                    ${effectiveLyrics && !domElements.instrumentalToggle.checked ? `
+                    <button class="download-button flex items-center gap-2 bg-gradient-to-r from-blue-400 to-purple-500 px-4 py-2 rounded-lg text-white font-semibold shadow hover:from-purple-500 hover:to-blue-400 transition" onclick="downloadLyrics('${track.id}', '${track.title || 'track'}', \`${effectiveLyrics.replace(/`/g, '\\`').replace(/</g, '<').replace(/>/g, '>')}\`)">
+                        <i class="fas fa-file-alt"></i>
+                        Download Lyrics
+                        <span class="ml-1 px-2 py-0.5 text-xs bg-blue-500 text-white rounded-full">TXT</span>
+                    </button>
+                    ` : ''}
+                </div>
+                <p class="text-xs text-gray-400 mb-2">🎧 Preview your track before downloading. Enjoy studio-quality audio.</p>
+                ` : ''}
+                ${effectiveLyrics && !domElements.instrumentalToggle.checked ? `
+                <details class="bg-gray-800 rounded p-3 mb-2">
+                    <summary class="cursor-pointer text-blue-400 font-semibold">Show Lyrics</summary>
+                    <pre class="text-green-300 mt-2 whitespace-pre-wrap">${effectiveLyrics.replace(/</g, '<').replace(/>/g, '>')}</pre>
+                </details>
+                ` : ''}
+                <hr class="my-3 border-t-2 border-green-400 rounded">
+            `
+            domElements.results.appendChild(card)
+        }
+
+        function toggleLyrics(trackId) {
+            const lyricsBox = document.getElementById(`lyrics-${trackId}`)
+            if (lyricsBox) {
+                console.log(`Toggling lyrics for track ${trackId}`)
+                lyricsBox.classList.toggle('expanded')
+            } else {
+                console.error(`Lyrics box not found for track ${trackId}`)
+                sendAnalytics('lyrics_toggle_error', { trackId })
+            }
+        }
+
+        async function downloadFile(url, filename) {
+            try {
+                console.log(`Downloading file: ${url} as ${filename}`)
+                const response = await fetch(url)
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch: ${response.statusText}`)
+                }
+                const blob = await response.blob()
+                const objectUrl = URL.createObjectURL(blob)
+                const a = document.createElement('a')
+                a.style.display = 'none'
+                a.href = objectUrl
+                a.download = filename
+                document.body.appendChild(a)
+                a.click()
+                setTimeout(() => {
+                    document.body.removeChild(a)
+                    URL.revokeObjectURL(objectUrl)
+                }, 100)
+            } catch (e) {
+                console.error('Download error:', e)
+                alert('Failed to download file. Please try again.')
+            }
+        }
+
+        function downloadLyrics(trackId, title, lyrics) {
+            if (lyrics) {
+                console.log(`Downloading lyrics for track ${trackId}, title: ${title}`)
+                const blob = new Blob([lyrics], { type: 'text/plain' })
+                const url = URL.createObjectURL(blob)
+                downloadFile(url, `${title}.txt`)
+                URL.revokeObjectURL(url)
+            } else {
+                console.error(`No lyrics found for track ${trackId}`)
+                if (domElements.errorMessage) {
+                    domElements.errorMessage.textContent = 'Error: No lyrics available for download'
+                    domElements.errorMessage.style.display = 'block'
+                }
+                sendAnalytics('no_lyrics_error', { trackId })
+            }
+        }
+
+        if (domElements.proModeToggle) {
+            domElements.proModeToggle.addEventListener('change', () => {
+                updateFieldVisibility()
+            })
+        } else {
+            console.warn('Pro mode toggle not found')
+            sendAnalytics('ui_warning', { error: 'Pro mode toggle not found' })
+        }
+
+        if (domElements.instrumentalToggle) {
+            domElements.instrumentalToggle.addEventListener('change', () => {
+                updateFieldVisibility()
+            })
+        } else {
+            console.warn('Instrumental toggle not found')
+            sendAnalytics('ui_warning', { error: 'Instrumental toggle not found' })
+        }
+
+        if (domElements.promptInput) {
+            domElements.promptInput.addEventListener('input', () => {
+                validateForm()
+                const count = domElements.promptInput.value.length
+                document.getElementById('prompt-char-count').textContent = `${count}/295 characters`
+            })
+        } else {
+            console.warn('Prompt input not found')
+            sendAnalytics('ui_warning', { error: 'Prompt input not found' })
+        }
+
+        if (domElements.lyricsInput) {
+            domElements.lyricsInput.addEventListener('input', () => {
+                validateForm()
+                const count = domElements.lyricsInput.value.length
+                document.getElementById('lyrics-char-count').textContent = `${count}/3000 characters`
+            })
+        } else {
+            console.warn('Lyrics input not found')
+            sendAnalytics('ui_warning', { error: 'Lyrics input not found' })
+        }
+
+        if (domElements.form) {
+            domElements.form.addEventListener('submit', async (e) => {
+                e.preventDefault()
+                if (isGenerating) return
+                isGenerating = true
+                domElements.generateButton.classList.add('loading')
+                domElements.generateButton.disabled = true
+                const formData = new FormData(e.target)
+                const requestData = {}
+                for (let [key, value] of formData.entries()) {
+                    if (key === 'negativeTags' || key === 'instruments') {
+                        if (!requestData[key]) requestData[key] = []
+                        requestData[key].push(value)
+                    } else {
+                        requestData[key] = value
+                    }
+                }
+                requestData.custom_mode = domElements.proModeToggle.checked
+                requestData.instrumental = domElements.instrumentalToggle.checked
+                try {
+                    const session = await supabase.auth.getSession()
+                    if (!session.data.session) {
+                        throw new Error('Please log in to generate songs.')
+                    }
+                    const token = session.data.session.access_token
+                    const response = await fetch('/generate', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify(requestData)
+                    })
+                    if (!response.ok) {
+                        throw new Error(`HTTP error: ${response.status}`)
+                    }
+                    const result = await response.json()
+                    if (result.msg === 'success') {
+                        currentTaskId = result.data.taskId
+                        domElements.progressContainer.style.display = 'block'
+                        domElements.progressBar.style.width = '0%'
+                        domElements.progressLabel.textContent = 'Starting generation... 0%'
+                        await trySSE(currentTaskId, requestData)
+                        setTimeout(() => pollStatus(currentTaskId, requestData), 5000)
+                    } else {
+                        throw new Error(result.message || 'Failed to start generation')
+                    }
+                } catch (e) {
+                    console.error('Generation error:', e)
+                    domElements.errorMessage.textContent = `Error: ${e.message}`
+                    domElements.errorMessage.style.display = 'block'
+                    isGenerating = false
+                    domElements.generateButton.classList.remove('loading')
+                    domElements.generateButton.disabled = false
+                }
+            })
+        } else {
+            console.warn('Form not found')
+            sendAnalytics('ui_warning', { error: 'Form not found' })
+        }
+
+        updateFieldVisibility()
+    </script>
+</body>
+</html>

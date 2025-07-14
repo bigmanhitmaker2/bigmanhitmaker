@@ -37,6 +37,8 @@ logger = logging.getLogger(__name__)
 
 # Load environment variables
 load_dotenv()
+# Log loaded DATABASE_URL for debugging
+logger.info(f"✅ Loaded DATABASE_URL: {os.getenv('DATABASE_URL')}")
 API_URL = os.getenv("API_BASE_URL") or os.getenv("SUNO_API_BASE_URL", "https://apibox.erweima.ai/api/v1/generate")
 API_KEY = os.getenv("API_TOKEN") or os.getenv("SUNO_API_KEY")
 REDIS_URL = os.getenv("REDIS_URL")
@@ -71,15 +73,30 @@ async def init_redis_client():
     return None
 
 redis_client = None
-app = FastAPI()
+tasks = None
+db_pool = None
 
-@app.on_event("startup")
-async def startup():
-    redis_url = os.getenv("REDIS_URL")  # Make sure this env var is set on Render!
-    if not redis_url:
-        raise Exception("REDIS_URL environment variable is not set!")
-    r = await redis.from_url(redis_url, encoding="utf-8", decode_responses=True)
-    await FastAPILimiter.init(r)
+async def lifespan(app: FastAPI):
+    global redis_client, tasks, db_pool
+    redis_client = await init_redis_client()
+    if redis_client is None:
+        tasks = {}  # In-memory fallback
+    else:
+        await FastAPILimiter.init(redis_client)  # Init limiter with Redis
+        try:
+            await redis_client.config_set("notify-keyspace-events", "KEA")
+            logger.info("Redis keyspace notifications enabled")
+        except Exception as e:
+            logger.error(f"Failed to enable Redis keyspace notifications: {str(e)}")
+
+    # Initialize DB pool
+    db_pool = await asyncpg.create_pool(DATABASE_URL)
+
+    yield
+
+    await db_pool.close()
+
+app = FastAPI(lifespan=lifespan)
 
 # Add CORS middleware
 app.add_middleware(
@@ -103,28 +120,6 @@ async def log_requests(request: Request, call_next):
     response = await call_next(request)
     logger.info(f"Response status: {response.status_code}")
     return response
-
-# Initialize Redis and limiter on startup
-@app.on_event("startup")
-async def startup_event():
-    global redis_client, tasks, db_pool
-    redis_client = await init_redis_client()
-    if redis_client is None:
-        tasks = {}  # In-memory fallback
-    else:
-        await FastAPILimiter.init(redis_client)  # Init limiter with Redis
-        try:
-            await redis_client.config_set("notify-keyspace-events", "KEA")
-            logger.info("Redis keyspace notifications enabled")
-        except Exception as e:
-            logger.error(f"Failed to enable Redis keyspace notifications: {str(e)}")
-
-    # Initialize DB pool
-    db_pool = await asyncpg.create_pool(DATABASE_URL)
-
-@app.on_event("shutdown")
-async def shutdown_event():
-    await db_pool.close()
 
 # Supabase JWT Validation
 SUPABASE_PROJECT_ID = "aafkyubzfmrlgiqhcnvp"
@@ -1082,7 +1077,7 @@ async def status_events(task_id: str):
 # Stripe setup
 stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
 # Stripe Secret API Key
-STRIPE_WEBHOOK_SECRET = "whsec_8VPPyyNkkdDywKlh2ScJuyNSxQ27tq04"  # Stripe webhook signing secret
+STRIPE_WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET")  # Use env var
 
 @app.post("/create-checkout-session")
 async def create_checkout_session(user: dict = Depends(get_current_user)):
@@ -1093,7 +1088,7 @@ async def create_checkout_session(user: dict = Depends(get_current_user)):
             mode='payment',
             line_items=[
                 {
-                    'price': 'price_XXXXXXXXXXXX',  # replace with your Price ID
+                    'price': 'price_1RkO5JFJut3IXSZdPIvdDsdF',
                     'quantity': 1,
                 },
             ],

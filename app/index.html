@@ -103,11 +103,41 @@
     <div class="container">
         <div class="card">
             <div id="auth-box" class="mb-4">
-                <input type="email" id="email" class="bg-gray-800 text-white rounded p-2 w-full mb-2" placeholder="Email">
-                <input type="password" id="password" class="bg-gray-800 text-white rounded p-2 w-full mb-2" placeholder="Password">
-                <button id="signup" class="cta-button w-full mb-2">Sign Up</button>
-                <button id="login" class="cta-button w-full mb-2">Log In</button>
-                <button id="logout" class="cta-button w-full" style="display:none;">Log Out</button>
+<!-- Email/Password Login -->
+<input type="email" id="email" class="bg-gray-800 text-white rounded p-2 w-full mb-2" placeholder="Email">
+<input type="password" id="password" class="bg-gray-800 text-white rounded p-2 w-full mb-2" placeholder="Password">
+<button id="signup" class="cta-button w-full mb-2">Sign Up</button>
+<button id="login" class="cta-button w-full mb-2">Log In</button>
+
+<!-- Divider -->
+<div class="flex items-center my-6">
+  <hr class="flex-grow border-t border-gray-600">
+  <span class="mx-3 text-gray-400 font-medium text-sm">or</span>
+  <hr class="flex-grow border-t border-gray-600">
+</div>
+
+<!-- Social Logins -->
+<div class="flex flex-col gap-4 w-full max-w-sm mx-auto">
+  <!-- Google Button -->
+  <button id="google-login-btn" type="button"
+    class="social-login-button flex items-center justify-center gap-3 px-4 py-2 rounded-full border border-gray-300 bg-white text-gray-800 font-semibold shadow hover:bg-gray-100 active:scale-95 transition duration-150 ease-in-out"
+    aria-label="Continue with Google">
+    <img src="/assets/google-icon.svg" alt="Google" class="w-5 h-5" />
+    <span>Continue with Google</span>
+    <span class="ml-2 spinner hidden"></span>
+  </button>
+  <!-- Facebook Button -->
+  <button id="facebook-login-btn" type="button"
+    class="social-login-button flex items-center justify-center gap-3 px-4 py-2 rounded-full bg-blue-600 text-white font-semibold shadow hover:bg-blue-700 active:scale-95 transition duration-150 ease-in-out"
+    aria-label="Continue with Facebook">
+    <img src="/assets/facebook-icon.svg" alt="Facebook" class="w-5 h-5" />
+    <span>Continue with Facebook</span>
+    <span class="ml-2 spinner hidden"></span>
+  </button>
+</div>
+
+<!-- Logout Button -->
+<button id="logout" class="cta-button w-full" style="display:none;">Log Out</button>
             </div>
             <button id="buyCredits" class="cta-button w-full mb-2">Buy 5 Song Credits</button>
             <form id="song-form" aria-labelledby="form-title">
@@ -362,6 +392,24 @@
       
         window.supabase = supabase
 
+        function setLoading(button, isLoading) {
+          const spinner = button.querySelector('.spinner');
+          if (isLoading) {
+            button.disabled = true;
+            if (spinner) spinner.classList.remove('hidden');
+            button.classList.add('opacity-60');
+          } else {
+            button.disabled = false;
+            if (spinner) spinner.classList.add('hidden');
+            button.classList.remove('opacity-60');
+          }
+        }
+
+        // On DOM load
+        document.querySelectorAll('.social-login-button').forEach(btn => {
+          btn.dataset.original = btn.innerHTML;
+        });
+
         document.getElementById('signup').onclick = async () => {
             const email = document.getElementById('email').value
             const password = document.getElementById('password').value
@@ -396,6 +444,20 @@
                 loadMySongs()
             }
         }
+
+        document.getElementById('google-login-btn').addEventListener('click', async () => {
+            const btn = document.getElementById('google-login-btn');
+            setLoading(btn, true);
+            const { error } = await supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin + '/callback.html' } });
+            if (error) console.error(error.message);
+        });
+
+        document.getElementById('facebook-login-btn').addEventListener('click', async () => {
+            const btn = document.getElementById('facebook-login-btn');
+            setLoading(btn, true);
+            const { error } = await supabase.auth.signInWithOAuth({ provider: 'facebook', options: { redirectTo: window.location.origin + '/callback.html' } });
+            if (error) console.error(error.message);
+        });
 
         document.getElementById('logout').onclick = async () => {
             await supabase.auth.signOut()

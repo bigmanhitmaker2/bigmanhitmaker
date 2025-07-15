@@ -393,16 +393,16 @@
         window.supabase = supabase
 
         function setLoading(button, isLoading) {
-          const spinner = button.querySelector('.spinner');
-          if (isLoading) {
-            button.disabled = true;
-            if (spinner) spinner.classList.remove('hidden');
-            button.classList.add('opacity-60');
-          } else {
-            button.disabled = false;
-            if (spinner) spinner.classList.add('hidden');
-            button.classList.remove('opacity-60');
-          }
+  const spinner = button.querySelector('.spinner');
+  if (isLoading) {
+    button.disabled = true;
+    if (spinner) spinner.classList.remove('hidden');
+    button.classList.add('opacity-60');
+  } else {
+    button.disabled = false;
+    if (spinner) spinner.classList.add('hidden');
+    button.classList.remove('opacity-60');
+  }
         }
 
         // On DOM load
@@ -416,6 +416,7 @@
             const { error } = await supabase.auth.signUp({
                 email: email,
                 password: password,
+                options: { emailRedirectTo: window.location.origin }
             })
             if (error) {
                 alert(error.message)
@@ -448,15 +449,21 @@
         document.getElementById('google-login-btn').addEventListener('click', async () => {
             const btn = document.getElementById('google-login-btn');
             setLoading(btn, true);
-            const { error } = await supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin + '/callback.html' } });
-            if (error) console.error(error.message);
+            const { error } = await supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin } });
+            if (error) {
+                alert('Google login failed: ' + error.message);
+                setLoading(btn, false);
+            }
         });
 
         document.getElementById('facebook-login-btn').addEventListener('click', async () => {
             const btn = document.getElementById('facebook-login-btn');
             setLoading(btn, true);
-            const { error } = await supabase.auth.signInWithOAuth({ provider: 'facebook', options: { redirectTo: window.location.origin + '/callback.html' } });
-            if (error) console.error(error.message);
+            const { error } = await supabase.auth.signInWithOAuth({ provider: 'facebook', options: { redirectTo: window.location.origin } });
+            if (error) {
+                alert('Facebook login failed: ' + error.message);
+                setLoading(btn, false);
+            }
         });
 
         document.getElementById('logout').onclick = async () => {
@@ -553,6 +560,35 @@
                 alert('Error unlocking song: ' + error.message)
             }
         }
+
+        window.addEventListener('load', async () => {
+          if (window.location.hash) {
+            const hash = window.location.hash.substring(1);
+            const params = new URLSearchParams(hash);
+            const accessToken = params.get('access_token');
+            const refreshToken = params.get('refresh_token');
+            if (accessToken) {
+              const { data, error } = await supabase.auth.setSession({
+                access_token: accessToken,
+                refresh_token: refreshToken,
+              });
+              if (error) {
+                console.error('Error setting session', error);
+              } else {
+                alert('Logged in with OAuth!');
+                loadMySongs();
+                history.replaceState(null, null, ' ');
+              }
+            }
+          }
+          const { data: { session } } = await supabase.auth.getSession();
+          if (session) {
+            document.getElementById('signup').style.display = 'none';
+            document.getElementById('login').style.display = 'none';
+            document.getElementById('logout').style.display = 'block';
+            loadMySongs();
+          }
+        });
 
         loadMySongs()
     </script>

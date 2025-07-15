@@ -122,7 +122,7 @@
   <button id="google-login-btn" type="button"
     class="social-login-button flex items-center justify-center gap-3 px-4 py-2 rounded-full border border-gray-300 bg-white text-gray-800 font-semibold shadow hover:bg-gray-100 active:scale-95 transition duration-150 ease-in-out"
     aria-label="Continue with Google">
-    <img src="/assets/google-icon.svg" alt="Google" class="w-5 h-5" />
+    <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/google.svg" alt="Google" class="w-5 h-5" />
     <span>Continue with Google</span>
     <span class="ml-2 spinner hidden"></span>
   </button>
@@ -130,7 +130,7 @@
   <button id="facebook-login-btn" type="button"
     class="social-login-button flex items-center justify-center gap-3 px-4 py-2 rounded-full bg-blue-600 text-white font-semibold shadow hover:bg-blue-700 active:scale-95 transition duration-150 ease-in-out"
     aria-label="Continue with Facebook">
-    <img src="/assets/facebook-icon.svg" alt="Facebook" class="w-5 h-5" />
+    <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/facebook.svg" alt="Facebook" class="w-5 h-5" />
     <span>Continue with Facebook</span>
     <span class="ml-2 spinner hidden"></span>
   </button>
@@ -385,11 +385,11 @@
     <footer class="text-center text-gray-400 py-4"><p>© 2025 Bigman Hitmaker+. All rights reserved.</p></footer>
     <script type="module">
         import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.42.5/+esm'
-      
+
         const supabaseUrl = 'https://aafkyubzfmrlgiqhcnvp.supabase.co'
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFhZmt5dWJ6Zm1ybGdpcWhjbnZwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTExMTkxMDgsImV4cCI6MjA2NjY5NTEwOH0.mUSV2_oa9uOCi1M_cGRe_3ZXx_eA6CI6LC0c8QfoL5Y'
-        const supabase = createClient(supabaseUrl, supabaseKey)
-      
+        const supabase = createClient(supabaseUrl, supabaseKey, { auth: { flowType: 'pkce' } })
+
         window.supabase = supabase
 
         function setLoading(button, isLoading) {
@@ -416,7 +416,7 @@
             const { error } = await supabase.auth.signUp({
                 email: email,
                 password: password,
-                options: { emailRedirectTo: window.location.origin }
+                options: { emailRedirectTo: window.location.origin + '/static/callback.html' }
             })
             if (error) {
                 alert(error.message)
@@ -449,7 +449,7 @@
         document.getElementById('google-login-btn').addEventListener('click', async () => {
             const btn = document.getElementById('google-login-btn');
             setLoading(btn, true);
-            const { error } = await supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin } });
+            const { error } = await supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin + '/static/callback.html' } });
             if (error) {
                 alert('Google login failed: ' + error.message);
                 setLoading(btn, false);
@@ -459,7 +459,7 @@
         document.getElementById('facebook-login-btn').addEventListener('click', async () => {
             const btn = document.getElementById('facebook-login-btn');
             setLoading(btn, true);
-            const { error } = await supabase.auth.signInWithOAuth({ provider: 'facebook', options: { redirectTo: window.location.origin } });
+            const { error } = await supabase.auth.signInWithOAuth({ provider: 'facebook', options: { redirectTo: window.location.origin + '/static/callback.html' } });
             if (error) {
                 alert('Facebook login failed: ' + error.message);
                 setLoading(btn, false);
@@ -562,32 +562,27 @@
         }
 
         window.addEventListener('load', async () => {
-          if (window.location.hash) {
-            const hash = window.location.hash.substring(1);
-            const params = new URLSearchParams(hash);
-            const accessToken = params.get('access_token');
-            const refreshToken = params.get('refresh_token');
-            if (accessToken) {
-              const { data, error } = await supabase.auth.setSession({
-                access_token: accessToken,
-                refresh_token: refreshToken,
-              });
-              if (error) {
-                console.error('Error setting session', error);
-              } else {
-                alert('Logged in with OAuth!');
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session) {
+                document.getElementById('signup').style.display = 'none';
+                document.getElementById('login').style.display = 'none';
+                document.getElementById('logout').style.display = 'block';
                 loadMySongs();
-                history.replaceState(null, null, ' ');
-              }
             }
-          }
-          const { data: { session } } = await supabase.auth.getSession();
-          if (session) {
-            document.getElementById('signup').style.display = 'none';
-            document.getElementById('login').style.display = 'none';
-            document.getElementById('logout').style.display = 'block';
-            loadMySongs();
-          }
+        });
+
+        supabase.auth.onAuthStateChange((event, session) => {
+            if (session) {
+                document.getElementById('signup').style.display = 'none';
+                document.getElementById('login').style.display = 'none';
+                document.getElementById('logout').style.display = 'block';
+                loadMySongs();
+            } else {
+                document.getElementById('signup').style.display = 'block';
+                document.getElementById('login').style.display = 'block';
+                document.getElementById('logout').style.display = 'none';
+                document.getElementById('mySongs').innerHTML = '';
+            }
         });
 
         loadMySongs()

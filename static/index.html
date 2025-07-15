@@ -86,9 +86,151 @@
         input:checked+.slider:before{transform:translateX(26px)}
         .toggle-label{display:inline-block;font-size:.875rem;color:#a0aec0;margin-left:.5rem}
         @media (max-width:640px){.container{padding:.5rem;margin-left:auto;margin-right:auto}h1{font-size:2rem}.cta-button,.generate-button,.retry-button,.download-button{width:100%;padding:.75rem;font-size:.875rem}select,textarea,input{width:100%}.card{margin-top:-1rem;padding:1rem}.track-card{padding:.75rem}.visualizer-bar{width:.2rem}.track-visualizer .visualizer-bar{width:.2rem}.mini-visualizer div{width:.2rem}.headline-hook{font-size:1.25rem}.headline-hook span{font-size:1.5rem}.headline-subtext{font-size:.875rem}.download-buttons{flex-direction:column}.toggle-switch{width:50px;height:28px}.slider:before{height:20px;width:20px;left:4px;bottom:4px}input:checked+.slider:before{transform:translateX(22px)}}
+        #login-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 100; }
+        #login-modal-content { background: #1f2937; padding: 2rem; border-radius: 1rem; width: 90%; max-width: 400px; }
+        #dropdown { display: none; }
+        #profile-btn:hover #dropdown { display: block; }
+        /* Nav Bar Enhancements */
+        nav {
+            background: linear-gradient(to right, #1e3a8a, #4c1d95);
+            padding-top: 1.25rem;
+            padding-bottom: 1.25rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            opacity: 0.95;
+        }
+        nav .text-xl {
+            letter-spacing: 0.05em;
+        }
+        nav a {
+            letter-spacing: 0.05em;
+            position: relative;
+        }
+        nav a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -0.25rem;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #34d399;
+            box-shadow: 0 0 5px #34d399;
+        }
+        nav a:hover {
+            color: #34d399;
+        }
+        .cta-button {
+            background: linear-gradient(90deg, #34d399, #6ee7b7);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-transform: uppercase;
+            font-weight: bold;
+            font-size: 1.1rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px;
+            transition: transform 0.2s, background 0.2s, box-shadow 0.2s;
+        }
+        .cta-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 10px #34d399;
+        }
+        .cta-button::before {
+            content: '🎵 ';
+        }
+        .generate-button {
+            background: linear-gradient(90deg, #10b981, #34d399);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, background 0.2s, box-shadow 0.2s;
+        }
+        .generate-button:hover:not(:disabled) {
+            transform: scale(1.05);
+            box-shadow: 0 0 10px #10b981;
+        }
+        .retry-button {
+            background: linear-gradient(90deg, #f59e0b, #fbbf24);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, background 0.2s, box-shadow 0.2s;
+        }
+        .retry-button:hover:not(:disabled) {
+            transform: scale(1.05);
+            box-shadow: 0 0 10px #f59e0b;
+        }
+        .download-button {
+            background: linear-gradient(90deg, #3b82f6, #6366f1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, background 0.2s, box-shadow 0.2s;
+        }
+        .download-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 10px #3b82f6;
+        }
+        #buyCredits {
+            display: none; /* Hidden by default, shown on login */
+        }
+        .animated-note {
+            animation: bounce 1s infinite;
+            display: inline-block;
+        }
+        nav a[href="#create"].active, nav a[href="#songs"].active {
+            color: #34d399;
+        }
     </style>
 </head>
 <body>
+    <nav class="fixed top-0 left-0 w-full bg-gradient-to-r from-[#1e3a8a] to-[#4c1d95] text-white py-6 px-8 flex items-center justify-between z-50 opacity-95">
+        <div class="flex items-center gap-2">
+            <span class="animated-note text-3xl">🎵</span>
+            <div class="text-2xl font-bold tracking-wider">Bigman Hitmaker+</div>
+        </div>
+        <div class="flex gap-8 tracking-wider">
+            <a href="#create" class="hover:text-[#34d399] transition-colors">Create</a>
+            <a href="#songs" class="hover:text-[#34d399] transition-colors">Songs</a>
+        </div>
+        <div id="user-section" class="flex gap-4">
+            <button id="sign-in-btn" class="cta-button"><i class="fas fa-sign-in-alt mr-2"></i>SIGN IN</button>
+            <button id="create-account-btn" class="cta-button"><i class="fas fa-user-plus mr-2"></i>CREATE ACCOUNT</button>
+            <span id="credits" class="cursor-pointer" style="display:none">🎧 10 Credits</span>
+            <div class="relative" id="profile-dropdown" style="display:none">
+                <button id="profile-btn">👤 User ▼</button>
+                <div id="dropdown" class="absolute hidden bg-white text-black p-2 rounded shadow">
+                    <a href="#my-songs">My Songs</a>
+                    <a href="#account">Account</a>
+                    <button id="logout">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div id="login-modal">
+        <div id="login-modal-content">
+            <div id="auth-box">
+                <input type="email" id="email" class="bg-gray-800 text-white rounded p-2 w-full mb-2" placeholder="Email">
+                <input type="password" id="password" class="bg-gray-800 text-white rounded p-2 w-full mb-2" placeholder="Password">
+                <button id="signup" class="cta-button w-full mb-2">Sign Up</button>
+                <button id="login" class="cta-button w-full mb-2">Log In</button>
+
+                <div class="flex items-center my-6">
+                    <hr class="flex-grow border-t border-gray-600">
+                    <span class="mx-3 text-gray-400 font-medium text-sm">or</span>
+                    <hr class="flex-grow border-t border-gray-600">
+                </div>
+
+                <div class="flex flex-col gap-4 w-full">
+                    <button id="google-login-btn" type="button"
+                        class="social-login-button flex items-center justify-center gap-3 px-4 py-2 rounded-full border border-gray-300 bg-white text-gray-800 font-semibold shadow hover:bg-gray-100 active:scale-95 transition duration-150 ease-in-out"
+                        aria-label="Continue with Google">
+                        <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/google.svg" alt="Google" class="w-5 h-5" />
+                        <span>Continue with Google</span>
+                        <span class="ml-2 spinner hidden"></span>
+                    </button>
+                    <button id="facebook-login-btn" type="button"
+                        class="social-login-button flex items-center justify-center gap-3 px-4 py-2 rounded-full bg-blue-600 text-white font-semibold shadow hover:bg-blue-700 active:scale-95 transition duration-150 ease-in-out"
+                        aria-label="Continue with Facebook">
+                        <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/facebook.svg" alt="Facebook" class="w-5 h-5" />
+                        <span>Continue with Facebook</span>
+                        <span class="ml-2 spinner hidden"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="hero">
         <div class="hero-content">
             <h1>Bigman Hitmaker+ <i class="fas fa-wave-square text-2xl text-green-400" aria-hidden="true"></i></h1>
@@ -102,44 +244,7 @@
     </div>
     <div class="container">
         <div class="card">
-            <div id="auth-box" class="mb-4">
-<!-- Email/Password Login -->
-<input type="email" id="email" class="bg-gray-800 text-white rounded p-2 w-full mb-2" placeholder="Email">
-<input type="password" id="password" class="bg-gray-800 text-white rounded p-2 w-full mb-2" placeholder="Password">
-<button id="signup" class="cta-button w-full mb-2">Sign Up</button>
-<button id="login" class="cta-button w-full mb-2">Log In</button>
-
-<!-- Divider -->
-<div class="flex items-center my-6">
-  <hr class="flex-grow border-t border-gray-600">
-  <span class="mx-3 text-gray-400 font-medium text-sm">or</span>
-  <hr class="flex-grow border-t border-gray-600">
-</div>
-
-<!-- Social Logins -->
-<div class="flex flex-col gap-4 w-full max-w-sm mx-auto">
-  <!-- Google Button -->
-  <button id="google-login-btn" type="button"
-    class="social-login-button flex items-center justify-center gap-3 px-4 py-2 rounded-full border border-gray-300 bg-white text-gray-800 font-semibold shadow hover:bg-gray-100 active:scale-95 transition duration-150 ease-in-out"
-    aria-label="Continue with Google">
-    <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/google.svg" alt="Google" class="w-5 h-5" />
-    <span>Continue with Google</span>
-    <span class="ml-2 spinner hidden"></span>
-  </button>
-  <!-- Facebook Button -->
-  <button id="facebook-login-btn" type="button"
-    class="social-login-button flex items-center justify-center gap-3 px-4 py-2 rounded-full bg-blue-600 text-white font-semibold shadow hover:bg-blue-700 active:scale-95 transition duration-150 ease-in-out"
-    aria-label="Continue with Facebook">
-    <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/facebook.svg" alt="Facebook" class="w-5 h-5" />
-    <span>Continue with Facebook</span>
-    <span class="ml-2 spinner hidden"></span>
-  </button>
-</div>
-
-<!-- Logout Button -->
-<button id="logout" class="cta-button w-full" style="display:none;">Log Out</button>
-            </div>
-            <button id="buyCredits" class="cta-button w-full mb-2">Buy 5 Song Credits</button>
+            <button id="buyCredits" class="cta-button w-full mb-2" style="display: none;">Buy 5 Song Credits</button>
             <form id="song-form" aria-labelledby="form-title">
                 <h2 id="form-title" class="sr-only">Song Generation Form</h2>
                 <div class="mt-4">
@@ -410,12 +515,29 @@
           btn.dataset.original = btn.innerHTML;
         });
 
+        document.getElementById('sign-in-btn').addEventListener('click', () => {
+            document.getElementById('login-modal').style.display = 'flex';
+            // Set to login mode
+        });
+
+        document.getElementById('create-account-btn').addEventListener('click', () => {
+            document.getElementById('login-modal').style.display = 'flex';
+            // Set to signup mode if needed
+        });
+
+        document.getElementById('login-modal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('login-modal')) {
+                document.getElementById('login-modal').style.display = 'none';
+            }
+        });
+
         document.getElementById('signup').onclick = async () => {
             const email = document.getElementById('email').value
             const password = document.getElementById('password').value
             const { error } = await supabase.auth.signUp({
                 email: email,
                 password: password,
+                options: { emailRedirectTo: window.location.origin + '/static/callback.html' }
             })
             if (error) {
                 alert(error.message)
@@ -424,6 +546,8 @@
                 document.getElementById('signup').style.display = 'none'
                 document.getElementById('login').style.display = 'none'
                 document.getElementById('logout').style.display = 'block'
+                document.getElementById('login-modal').style.display = 'none';
+                updateNavOnLogin();
             }
         }
 
@@ -441,6 +565,8 @@
                 document.getElementById('signup').style.display = 'none'
                 document.getElementById('login').style.display = 'none'
                 document.getElementById('logout').style.display = 'block'
+                document.getElementById('login-modal').style.display = 'none';
+                updateNavOnLogin();
                 loadMySongs()
             }
         }
@@ -448,7 +574,7 @@
         document.getElementById('google-login-btn').addEventListener('click', async () => {
             const btn = document.getElementById('google-login-btn');
             setLoading(btn, true);
-            const { error } = await supabase.auth.signInWithOAuth({ provider: 'google' });
+            const { error } = await supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin + '/static/callback.html' } });
             if (error) {
                 alert('Google login failed: ' + error.message);
                 setLoading(btn, false);
@@ -458,7 +584,7 @@
         document.getElementById('facebook-login-btn').addEventListener('click', async () => {
             const btn = document.getElementById('facebook-login-btn');
             setLoading(btn, true);
-            const { error } = await supabase.auth.signInWithOAuth({ provider: 'facebook' });
+            const { error } = await supabase.auth.signInWithOAuth({ provider: 'facebook', options: { redirectTo: window.location.origin + '/static/callback.html' } });
             if (error) {
                 alert('Facebook login failed: ' + error.message);
                 setLoading(btn, false);
@@ -472,15 +598,57 @@
             document.getElementById('login').style.display = 'block'
             document.getElementById('logout').style.display = 'none'
             document.getElementById('mySongs').innerHTML = ''
+            updateNavOnLogout();
+        }
+
+        async function fetchCredits() {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) return 0;
+            const token = session.access_token;
+            try {
+                const res = await fetch('/user/credits', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    return data.credits;
+                }
+            } catch (e) {
+                console.error('Error fetching credits:', e);
+            }
+            return 0;
+        }
+
+        async function updateNavOnLogin() {
+            document.getElementById('sign-in-btn').style.display = 'none';
+            document.getElementById('create-account-btn').style.display = 'none';
+            document.getElementById('credits').style.display = 'inline';
+            document.getElementById('profile-dropdown').style.display = 'inline';
+            document.getElementById('buyCredits').style.display = 'block';
+            const credits = await fetchCredits();
+            document.getElementById('credits').textContent = `🎧 ${credits} Credits`;
+            document.getElementById('profile-btn').textContent = '👤 User ▼';
+            // Highlight active tab (example for Create)
+            document.querySelector('a[href="#create"]').classList.add('active');
+        }
+
+        function updateNavOnLogout() {
+            document.getElementById('sign-in-btn').style.display = 'inline';
+            document.getElementById('create-account-btn').style.display = 'inline';
+            document.getElementById('credits').style.display = 'none';
+            document.getElementById('profile-dropdown').style.display = 'none';
+            document.getElementById('buyCredits').style.display = 'none';
+            // Remove active class
+            document.querySelector('a[href="#create"]').classList.remove('active');
         }
 
         document.getElementById('buyCredits').onclick = async () => {
-            const session = await supabase.auth.getSession()
-            if (!session.data.session) {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) {
                 alert('Please log in to buy credits.')
                 return
             }
-            const token = session.data.session.access_token
+            const token = session.access_token
             const res = await fetch('/create-checkout-session', {
                 method: 'POST',
                 headers: {
@@ -497,12 +665,12 @@
         }
 
         async function loadMySongs() {
-            const session = await supabase.auth.getSession()
-            if (!session.data.session) {
+            const { data: { session } } = await supabase.auth.getSession()
+            if (!session) {
                 document.getElementById('mySongs').innerHTML = '<p>Please log in to view your songs.</p>'
                 return
             }
-            const token = session.data.session.access_token
+            const token = session.access_token
             try {
                 const res = await fetch('/my-songs', {
                     headers: { 'Authorization': `Bearer ${token}` }
@@ -537,12 +705,12 @@
         }
 
         window.unlockSong = async function(songId) {
-            const session = await supabase.auth.getSession()
-            if (!session.data.session) {
+            const { data: { session } } = await supabase.auth.getSession()
+            if (!session) {
                 alert('Please log in to unlock songs.')
                 return
             }
-            const token = session.data.session.access_token
+            const token = session.access_token
             try {
                 const res = await fetch(`/unlock-song/${songId}`, {
                     method: 'POST',
@@ -561,27 +729,54 @@
         }
 
         window.addEventListener('load', async () => {
+            if (window.location.hash) {
+                const hash = window.location.hash.substring(1);
+                const params = new URLSearchParams(hash);
+                const accessToken = params.get('access_token');
+                const refreshToken = params.get('refresh_token');
+                if (accessToken) {
+                    const { data, error } = await supabase.auth.setSession({
+                        access_token: accessToken,
+                        refresh_token: refreshToken,
+                    });
+                    if (error) {
+                        console.error('Error setting session', error);
+                    } else {
+                        alert('Logged in with OAuth!');
+                        loadMySongs();
+                        history.replaceState(null, null, ' ');
+                        updateNavOnLogin();
+                    }
+                }
+            }
             const { data: { session } } = await supabase.auth.getSession();
             if (session) {
                 document.getElementById('signup').style.display = 'none';
                 document.getElementById('login').style.display = 'none';
                 document.getElementById('logout').style.display = 'block';
                 loadMySongs();
+                updateNavOnLogin();
+            } else {
+                updateNavOnLogout();
             }
+            // Set active tab based on hash
+            const links = document.querySelectorAll('nav a');
+            links.forEach(link => {
+                if (link.href.includes(window.location.hash)) {
+                    link.classList.add('active');
+                }
+            });
         });
 
-        supabase.auth.onAuthStateChange((event, session) => {
-            if (session) {
-                document.getElementById('signup').style.display = 'none';
-                document.getElementById('login').style.display = 'none';
-                document.getElementById('logout').style.display = 'block';
-                loadMySongs();
-            } else {
-                document.getElementById('signup').style.display = 'block';
-                document.getElementById('login').style.display = 'block';
-                document.getElementById('logout').style.display = 'none';
-                document.getElementById('mySongs').innerHTML = '';
-            }
+        // Update active tab on hash change
+        window.addEventListener('hashchange', () => {
+            const links = document.querySelectorAll('nav a');
+            links.forEach(link => {
+                link.classList.remove('active');
+                if (link.href.includes(window.location.hash)) {
+                    link.classList.add('active');
+                }
+            });
         });
 
         loadMySongs()
@@ -909,7 +1104,7 @@
             while (Date.now() - startTime < maxDuration) {
                 try {
                     console.log(`Polling status for task ${taskId}`)
-                    const response = await fetch(`/status/${taskId}`)
+                    const response = await fetch('/status/' + taskId)
                     if (!response.ok) {
                         throw new Error(`HTTP error: ${response.status}`)
                     }
@@ -941,7 +1136,7 @@
                                     retryTask(taskId)
                                 }
                             }
-                            const response = await fetch(`/status/${taskId}?force=true`)
+                            const response = await fetch('/status/' + taskId + '?force=true')
                             const refreshedData = await response.json()
                             console.log('Refreshed status:', JSON.stringify(refreshedData, null, 2))
                             updateProgress(refreshedData, taskId, formData)
@@ -1008,11 +1203,16 @@
                     retryButton.classList.add('loading')
                     retryButton.disabled = true
                 }
-                const response = await fetch(`/retry/${taskId}`, {
+                const { data: { session } } = await supabase.auth.getSession()
+                if (!session) {
+                    throw new Error('Session not found for retry')
+                }
+                const token = session.access_token
+                const response = await fetch('/retry/' + taskId, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${(await supabase.auth.getSession()).data.session.access_token}`
+                        'Authorization': `Bearer ${token}`
                     }
                 })
                 const result = await response.json()
@@ -1337,11 +1537,11 @@
                 requestData.custom_mode = domElements.proModeToggle.checked
                 requestData.instrumental = domElements.instrumentalToggle.checked
                 try {
-                    const session = await supabase.auth.getSession()
-                    if (!session.data.session) {
+                    const { data: { session } } = await supabase.auth.getSession()
+                    if (!session) {
                         throw new Error('Please log in to generate songs.')
                     }
-                    const token = session.data.session.access_token
+                    const token = session.access_token
                     const response = await fetch('/generate', {
                         method: 'POST',
                         headers: {
